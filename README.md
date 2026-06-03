@@ -1,0 +1,76 @@
+# AI Marketing Platform (n8n Workflow)
+
+This project is an **AI-powered marketing automation platform** built with **n8n**, **LangChain AI Agent**, **Ollama LLM**, and **Tavily Internet Search**.
+
+---
+
+## 🚀 Key Capabilities
+
+- 💬 AI Telegram assistant for users and leads
+- 🎤 Voice message processing (speech-to-text)
+- 🧠 AI responses via local LLM (Ollama)
+- 🌐 Real-time web search (Tavily API)
+- 💾 Per-user memory (conversation context)
+- 📣 Admin notifications for all incoming leads/messages
+
+---
+
+## ✨ Features
+
+### 💬 Telegram AI Chatbot (Lead Interface)
+Users can interact with the platform via Telegram.  
+It can be used as:
+- Lead qualification bot
+- Customer support assistant
+- Marketing assistant
+
+---
+
+### 🎤 Voice Message Support
+Voice messages are processed through pipeline:
+
+1. Download from Telegram
+2. Convert speech → text (Whisper / OpenAI transcription)
+3. Send to AI agent for processing
+
+---
+
+### 🧠 AI Agent (LangChain + Ollama)
+Core intelligence layer:
+
+- Model: **qwen3.5:9b (Ollama)**
+- Routes user requests to tools
+- Executes web search when needed
+- Uses system prompt optimized for assistant behavior
+
+---
+
+### 🌐 Web Search Tool
+Integrated via **Tavily API**:
+
+- Fetches real-time information from the internet
+- Helps AI answer up-to-date questions
+- Used as a tool by AI agent
+
+---
+
+### 💾 Memory System
+Uses `MemoryBufferWindow`:
+
+- Stores conversation history per Telegram user
+- Enables contextual responses
+- Improves personalization
+
+---
+
+### 📣 Admin Notification System
+Every incoming message is automatically forwarded to admin chats:
+
+- User details
+- Message content
+- AI response
+- Telegram username link
+
+---
+
+

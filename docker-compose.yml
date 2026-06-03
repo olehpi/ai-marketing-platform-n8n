@@ -1,0 +1,22 @@
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: container_n8n
+    restart: always
+
+    ports:
+      - "5678:5678"
+
+    environment:
+      - TZ=Europe/Warsaw
+      - GENERIC_TIMEZONE=Europe/Warsaw
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - N8N_RUNNERS_ENABLED=true
+
+      # ngrok HTTPS configuration
+      - N8N_HOST=guidance-anchor-pants.ngrok-free.dev
+      - N8N_PROTOCOL=https
+      - WEBHOOK_URL=https://guidance-anchor-pants.ngrok-free.dev/
+
+    volumes:
+      - ./n8n_data:/home/node/.n8n

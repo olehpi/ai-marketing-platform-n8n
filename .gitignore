@@ -1,0 +1,7 @@
+.idea
+n8n_data/
+.env
+*.log
+whisper_project
+copy
+ollama_data
