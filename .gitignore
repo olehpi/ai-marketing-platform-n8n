@@ -1,8 +1,10 @@
 .idea
-*.log
-.env
-.env.local
 n8n_data/
 ollama_data/
 postgres_data/
 whisper_data/
+
+.env
+.env.local
+
+*.log

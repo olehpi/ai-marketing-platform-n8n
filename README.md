@@ -83,3 +83,20 @@ POSTGRES_DB=n8n_chat_memory
 N8N_HOST=your-domain
 N8N_PROTOCOL=https
 WEBHOOK_URL=https://your-domain/
+```
+
+### Local Startup
+Use the interactive PowerShell scripts from the repository root:
+
+1. Open PowerShell in this folder.
+2. Run `.\start.ps1`.
+3. Confirm the prompts for Docker, ngrok, Ollama, Whisper, and n8n startup.
+4. Wait for the n8n health check to return `200 OK`.
+5. Open the displayed n8n URL, or use `http://localhost:5678` if ngrok is not available.
+6. Run `.\status.ps1` anytime to check Docker, Ollama, and ngrok status.
+
+Useful commands:
+
+- `.\status.ps1` shows Docker, Ollama, and ngrok status.
+- `.\stop.ps1` stops Whisper, n8n, Postgres, ngrok, and Ollama.
+- Logs are written to the `logs/` directory.

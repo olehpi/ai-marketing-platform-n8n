@@ -11,8 +11,8 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.3,
       "position": [
-        -1200,
-        -144
+        -1088,
+        -112
       ],
       "id": "545d5607-d8cf-454a-864a-27024e79131b",
       "name": "Telegram Trigger",
@@ -77,6 +77,31 @@
               },
               "renameOutput": true,
               "outputKey": "voice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4cc68331-9dd5-4c01-aa42-510aaa63bb48",
+                    "leftValue": "={{ $json.message.video_note.thumbnail.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "video"
             }
           ]
         },
@@ -85,55 +110,11 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -960,
-        -144
+        -864,
+        -128
       ],
       "id": "a5c04170-140d-4de4-b0ff-f08b3836a248",
       "name": "Switch"
-    },
-    {
-      "parameters": {
-        "resource": "file",
-        "fileId": "={{ $json.message.voice.file_id }}",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -832,
-        -32
-      ],
-      "id": "0ca7c139-3231-43b1-9cfc-a6596d8e472b",
-      "name": "Get a file",
-      "webhookId": "78fa9e26-2887-4363-8203-3401dcb4b330",
-      "credentials": {
-        "telegramApi": {
-          "id": "EZL8Lnbij5C6y6hq",
-          "name": "Telegram account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "audio",
-        "operation": "transcribe",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.openAi",
-      "typeVersion": 2.3,
-      "position": [
-        -640,
-        112
-      ],
-      "id": "8c1a7463-0279-4275-bb32-764f512dd07a",
-      "name": "Transcribe a recording",
-      "credentials": {
-        "openAiApi": {
-          "id": "DZemVs0bAWZnAuOe",
-          "name": "OpenAI account"
-        }
-      },
-      "disabled": true
     },
     {
       "parameters": {
@@ -152,8 +133,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -768,
-        -336
+        -416,
+        -304
       ],
       "id": "c41a103a-79d7-4036-ae03-3496bf1f74d9",
       "name": "Edit Fields"
@@ -163,14 +144,14 @@
         "promptType": "define",
         "text": "={{ $json.text ?? $json.data ?? $json.output }} ",
         "options": {
-          "systemMessage": "Overview:\nYou are a useful assistant.\nYou are the highly capable personal assistant. \nYour main task is to send the user's query to the appropriate tool. You should not be generating summaries — your only responsibility is to trigger the right tool.\nEach time you answer, ask if you want to discuss the terms of the advertisement.\nAlways answer in the language you were asked in!\n\nTools: Internet search.  Use this tool to search the web. Use Internet search ONLY if user query is not empty. Never call tools with empty input.\n\n"
+          "systemMessage": "Overview:\nYou are a useful assistant.\nYou are the highly capable personal assistant. \nYour main task is to send the user's query to the appropriate tool. You should not be generating summaries — your only responsibility is to trigger the right tool.\nEach time you answer, ask if you want to discuss the terms of the advertisement.\nAlways answer in the language you were asked in!\n\nOutput Rule:\nYou MUST always return a non-empty text response.\nIf the tool's or agent's output is unavailable or empty:\nRequest the model to prepare a polite response for the user explaining that you couldn't find the answer.\n\nTools: Internet search.  Use this tool to search the web. Use Internet search ONLY if user query is not empty. Never call tools with empty input.\n\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -336,
-        -336
+        -136,
+        -112
       ],
       "id": "01d5cca7-3470-473d-81d6-5768ce3c66b5",
       "name": "AI Agent"
@@ -179,14 +160,14 @@
       "parameters": {
         "model": "qwen3.5:9b",
         "options": {
-          "numCtx": 4096
+          "numCtx": 8192
         }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -416,
-        -112
+        -192,
+        112
       ],
       "id": "74dd8220-7fd1-4215-900d-73c4c3cbe3bd",
       "name": "Ollama Chat Model",
@@ -200,7 +181,7 @@
     {
       "parameters": {
         "chatId": "={{ $('Switch').item.json.message.from.id }}",
-        "text": "={{ $json.output }}",
+        "text": "={{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "HTML"
@@ -209,8 +190,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        144,
-        -512
+        272,
+        -304
       ],
       "id": "8f216825-5598-43b8-9b6d-3819e3490ad3",
       "name": "Send a text message",
@@ -231,8 +212,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.4,
       "position": [
-        -256,
-        112
+        -1088,
+        -512
       ],
       "id": "05b45616-5b04-4778-adae-665238c444ab",
       "name": "Simple Memory"
@@ -244,14 +225,14 @@
         "url": "https://api.tavily.com/search",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n    \"api_key\": \"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\",\n  \"query\": \"{{$json.text\n  .replace(/\\n/g, \" \")\n  .replace(/https?:\\/\\/\\S+/g, \"$&\")\n  .trim()\n}}\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"topic\": \"general\",\n  \"include_raw_content\": false,\n  \"max_results\": 4\n} ",
+        "jsonBody": "={\n    \"api_key\": \"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\",\n  \"query\": \"{{($json?.text || $json.message?.text || $json?.data || '')\n  .replace(/\\n/g, ' ')\n  .replace(/https?:\\/\\/\\S+/g, \"$&\")\n  .trim()\n}}\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"topic\": \"general\",\n  \"include_raw_content\": false,\n  \"max_results\": 4\n} ",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -112,
-        -112
+        64,
+        112
       ],
       "id": "b280d024-4a91-4666-ad95-87dda248bb66",
       "name": "Internet search"
@@ -259,7 +240,7 @@
     {
       "parameters": {
         "chatId": "=699860511",
-        "text": "=🆔 chat_id: {{ $('Telegram Trigger').item.json.message.chat.id }}\n👤 {{ $('Telegram Trigger').item.json.message.from.first_name }} {{ $('Telegram Trigger').item.json.message.from.last_name }}: {{ $('Telegram Trigger').item.json.message.text }}\n🤖 AI-assistent: {{$json.output}}\n\nReply to https://t.me/{{ $('Telegram Trigger').item.json.message.from.username }}\n\n\n\n",
+        "text": "=🆔 chat_id: {{ $('Telegram Trigger').item.json.message.chat.id }}\n👤 {{ $('Telegram Trigger').item.json.message.from.first_name }} {{ $('Telegram Trigger').item.json.message.from.last_name }}: {{ $('Telegram Trigger').item.json.message.text }}\n🤖 AI-assistent: {{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n\nReply to https://t.me/{{ $('Telegram Trigger').item.json.message.from.username }}\n\n\n\n",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "=HTML"
@@ -268,8 +249,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        144,
-        -320
+        272,
+        -112
       ],
       "id": "23bd1aec-1bf8-4e78-af17-f7bd263fef41",
       "name": "Send a text message to admin",
@@ -284,7 +265,7 @@
     {
       "parameters": {
         "chatId": "=410770979",
-        "text": "=🆔 chat_id: {{ $('Telegram Trigger').item.json.message.chat.id }}\n👤 {{ $('Telegram Trigger').item.json.message.from.first_name }} {{ $('Telegram Trigger').item.json.message.from.last_name }}: {{ $('Telegram Trigger').item.json.message.text }}\n🤖 AI-assistent: {{$json.output}}\n\nReply to https://t.me/{{ $('Telegram Trigger').item.json.message.from.username }}\n",
+        "text": "=🆔 chat_id: {{ $('Telegram Trigger').item.json.message.chat.id }}\n👤 {{ $('Telegram Trigger').item.json.message.from.first_name }} {{ $('Telegram Trigger').item.json.message.from.last_name }}: {{ $('Telegram Trigger').item.json.message.text }}\n🤖 AI-assistent: {{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n\nReply to https://t.me/{{ $('Telegram Trigger').item.json.message.from.username }}\n",
         "additionalFields": {
           "appendAttribution": false,
           "parse_mode": "=HTML"
@@ -293,8 +274,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        160,
-        -112
+        272,
+        80
       ],
       "id": "985fd2f0-adf3-42f1-b15b-5e34618064d7",
       "name": "Send a text message to V",
@@ -310,13 +291,13 @@
       "parameters": {
         "sessionIdType": "customKey",
         "sessionKey": "={{ $('Telegram Trigger').item.json.message.from.id }}",
-        "contextWindowLength": 100
+        "contextWindowLength": 25
       },
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.4,
       "position": [
-        -256,
-        -112
+        -64,
+        112
       ],
       "id": "9cc5dc03-383c-44e1-a56f-f5eb51c0ed6f",
       "name": "Postgres Chat Memory",
@@ -324,6 +305,52 @@
         "postgres": {
           "id": "ZdBU97NJixhPiEbb",
           "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice?.file_id }}",
+        "additionalFields": {
+          "mimeType": ""
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        -112
+      ],
+      "id": "0ca7c139-3231-43b1-9cfc-a6596d8e472b",
+      "name": "Get an audio file",
+      "webhookId": "78fa9e26-2887-4363-8203-3401dcb4b330",
+      "credentials": {
+        "telegramApi": {
+          "id": "EZL8Lnbij5C6y6hq",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.video_note?.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -640,
+        80
+      ],
+      "id": "91959e7b-14b7-4888-ae5c-6c421025ff0c",
+      "name": "Get a video file",
+      "webhookId": "78fa9e26-2887-4363-8203-3401dcb4b330",
+      "credentials": {
+        "telegramApi": {
+          "id": "EZL8Lnbij5C6y6hq",
+          "name": "Telegram account"
         }
       }
     },
@@ -347,11 +374,37 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -672,
-        -32
+        -416,
+        -112
       ],
       "id": "afc1e9fa-6121-4c46-bc56-f69033c49c0c",
-      "name": "HTTP Request"
+      "name": "HTTP Request: Whisper ASR for an audio-message option"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:9000/asr?encode=true&task=transcribe&language=ru&output=txt",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "audio_file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -416,
+        80
+      ],
+      "id": "eafe2969-07e5-4a26-9716-d7abb935b178",
+      "name": "HTTP Request for an video-message option"
     }
   ],
   "pinData": {},
@@ -378,18 +431,14 @@
         ],
         [
           {
-            "node": "Get a file",
+            "node": "Get an audio file",
             "type": "main",
             "index": 0
           }
-        ]
-      ]
-    },
-    "Get a file": {
-      "main": [
+        ],
         [
           {
-            "node": "HTTP Request",
+            "node": "Get a video file",
             "type": "main",
             "index": 0
           }
@@ -416,11 +465,6 @@
             "index": 0
           }
         ]
-      ]
-    },
-    "Transcribe a recording": {
-      "main": [
-        []
       ]
     },
     "AI Agent": {
@@ -471,7 +515,40 @@
         ]
       ]
     },
-    "HTTP Request": {
+    "Get an audio file": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request: Whisper ASR for an audio-message option",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a video file": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request for an video-message option",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request: Whisper ASR for an audio-message option": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request for an video-message option": {
       "main": [
         [
           {
@@ -483,12 +560,12 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "fd9718b3-2939-4cdd-bf8b-de129d903cd9",
+  "versionId": "fa2bf9c0-bfc2-487a-a6e6-88f92bc6b6b5",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
