@@ -5,3 +5,5 @@ n8n_data/
 whisper_project
 copy
 ollama_data
+.env
+.env.local
