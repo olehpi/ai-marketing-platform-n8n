@@ -111,8 +111,7 @@
           "id": "EZL8Lnbij5C6y6hq",
           "name": "Telegram account"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
@@ -123,11 +122,17 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.3,
       "position": [
-        -688,
-        -32
+        -640,
+        112
       ],
       "id": "8c1a7463-0279-4275-bb32-764f512dd07a",
       "name": "Transcribe a recording",
+      "credentials": {
+        "openAiApi": {
+          "id": "DZemVs0bAWZnAuOe",
+          "name": "OpenAI account"
+        }
+      },
       "disabled": true
     },
     {
@@ -156,9 +161,9 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.text }}",
+        "text": "={{ $json.text ?? $json.data ?? $json.output }} ",
         "options": {
-          "systemMessage": "Overview:\nYou are a useful assistant.\nYou are the highly capable personal assistant. \nYour main task is to send the user's query to the appropriate tool. You should not be generating summaries — your only responsibility is to trigger the right tool.\nEach time you answer, ask if you want to discuss the terms of the advertisement.\nAlways answer in the language you were asked in!\n\nTools: Internet search.  Use this tool to search the web\n\n"
+          "systemMessage": "Overview:\nYou are a useful assistant.\nYou are the highly capable personal assistant. \nYour main task is to send the user's query to the appropriate tool. You should not be generating summaries — your only responsibility is to trigger the right tool.\nEach time you answer, ask if you want to discuss the terms of the advertisement.\nAlways answer in the language you were asked in!\n\nTools: Internet search.  Use this tool to search the web. Use Internet search ONLY if user query is not empty. Never call tools with empty input.\n\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
@@ -197,7 +202,8 @@
         "chatId": "={{ $('Switch').item.json.message.from.id }}",
         "text": "={{ $json.output }}",
         "additionalFields": {
-          "appendAttribution": false
+          "appendAttribution": false,
+          "parse_mode": "HTML"
         }
       },
       "type": "n8n-nodes-base.telegram",
@@ -226,7 +232,7 @@
       "typeVersion": 1.4,
       "position": [
         -256,
-        96
+        112
       ],
       "id": "05b45616-5b04-4778-adae-665238c444ab",
       "name": "Simple Memory"
@@ -320,6 +326,32 @@
           "name": "Postgres account"
         }
       }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:9000/asr?encode=true&task=transcribe&language=ru&output=txt",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "audio_file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -672,
+        -32
+      ],
+      "id": "afc1e9fa-6121-4c46-bc56-f69033c49c0c",
+      "name": "HTTP Request"
     }
   ],
   "pinData": {},
@@ -357,7 +389,7 @@
       "main": [
         [
           {
-            "node": "Transcribe a recording",
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
           }
@@ -388,13 +420,7 @@
     },
     "Transcribe a recording": {
       "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "AI Agent": {
@@ -444,6 +470,17 @@
           }
         ]
       ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -451,8 +488,9 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "cc975777-4a6d-44ea-8191-2f7629650bd3",
+  "versionId": "fd9718b3-2939-4cdd-bf8b-de129d903cd9",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
   },
   "id": "8M7APYPSjxyM1wN1",

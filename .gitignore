@@ -1,9 +1,8 @@
 .idea
-n8n_data/
-.env
 *.log
-whisper_project
-copy
-ollama_data
 .env
 .env.local
+n8n_data/
+ollama_data/
+postgres_data/
+whisper_data/

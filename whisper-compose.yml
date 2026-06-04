@@ -1,0 +1,19 @@
+﻿services:
+  faster-whisper:
+    image: onerahmet/openai-whisper-asr-webservice:latest
+    container_name: faster-whisper
+    restart: unless-stopped
+
+    ports:
+      - "9000:9000"
+
+    environment:
+      - ASR_MODEL=small
+
+    volumes:
+      - ./whisper_data:/root/.cache
+
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
