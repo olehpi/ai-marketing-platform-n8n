@@ -1,0 +1,461 @@
+{
+  "name": "Facebook-comments-auto-reply",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "facebook-comments",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "bddca96a-3039-4f71-92fa-364bcda42b72",
+      "name": "Facebook Webhook VERIFY",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        656,
+        320
+      ],
+      "webhookId": "verify-facebook-comments"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "48a3a0f1-85a2-49ba-868a-a75d95d1d7e0",
+              "leftValue": "={{$json.query[\"hub.verify_token\"]}}",
+              "rightValue": "Valentyna",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "55cc6eff-47b1-460d-bc7e-b45267a0356b",
+      "name": "Verify Token Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        864,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{$json.query[\"hub.challenge\"]}}",
+        "options": {}
+      },
+      "id": "9185bc73-6ca0-434e-bf0d-7269131bd70b",
+      "name": "Respond Challenge",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "c0b04fe3-2db1-4a6e-9dfc-53776c37e718",
+      "name": "Respond Fail",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "facebook-comments",
+        "options": {}
+      },
+      "id": "e75cce4d-b1df-4caf-8c8a-01c18858da51",
+      "name": "Facebook Webhook EVENTS",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        656,
+        720
+      ],
+      "webhookId": "event-facebook-comments"
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $json.body.entry[0].messaging[0];\n\nreturn [\n  {\n    json: {\n      senderId: msg.sender.id,\n      text: msg.message.text,\n      messageId: msg.message.mid,\n      pageId: msg.recipient.id,\n      timestamp: msg.timestamp\n    }\n  }\n];"
+      },
+      "id": "e9716aa1-8c23-4723-a055-f3fe7a81ad9d",
+      "name": "Extract Comment",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        864,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.from_id }}",
+              "operation": "notEqual",
+              "value2": "YOUR_PAGE_ID"
+            }
+          ],
+          "combinator": "and",
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "id": "3e6e4e41-9548-4653-b9fc-f60f68e40d3a",
+      "name": "Ignore Page Comments",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/me/messages",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "EAAZBge4TRmZCoBRho4YIIOqOmoMOQ1Xp4IUKno6I7CxjiUKDZCvE9u509SKZAqMRPYZBEhPqMIewUj7ySDtRu0Ut3fW6IEnNZAjCQATAMQwUEI52x1ImE381ZAZCJrq1z4atozeXfZCwwmSgrpZCtmiZAlz5LPKWiTtulX0KZBDTKTFyjQw1GEp6uKYfQKZB4ZClIYJIztJ0JrR2WhvAZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Facebook Webhook EVENTS').item.json.body.entry[0].messaging[0].sender.id }}\"\n  },\n  \"message\": {\n    \"text\": \"{{ $json.output.replace(/\\n/g, '\\\\n') }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "e61ff46b-a800-4b05-bd4f-20457b63eea9",
+      "name": "Facebook Reply",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1744,
+        816
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "Overview:\nYou are a useful assistant.\nYou are the highly capable personal assistant. \nYour main task is to send the user's query to the appropriate tool. You should not be generating summaries — your only responsibility is to trigger the right tool.\nEach time you answer, ask if you want to discuss the terms of the advertisement.\nAlways answer in the language you were asked in!\n\nOutput Rule:\nYou MUST always return a non-empty text response.\nIf the tool's or agent's output is unavailable or empty:\nRequest the model to prepare a polite response for the user explaining that you couldn't find the answer.\n\nTools: Internet search.  Use this tool to search the web. Use Internet search ONLY if user query is not empty. Never call tools with empty input.\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1328,
+        400
+      ],
+      "id": "ec2c9621-2179-4903-a43f-3fe5ff26f727",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "qwen3.5:9b",
+        "options": {
+          "numCtx": 8192
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        624
+      ],
+      "id": "313a094d-2115-486d-8757-fe0ecdc0ba5b",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "pIqtOWtJZu0eo70k",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "=699860511",
+        "text": "={{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1744,
+        208
+      ],
+      "id": "e317805b-c8dc-486e-b50b-50ed77d6f7e4",
+      "name": "Send a text message",
+      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
+      "credentials": {
+        "telegramApi": {
+          "id": "EZL8Lnbij5C6y6hq",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Makes an HTTP request and returns the response data",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"api_key\": \"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\",\n  \"query\": \"{{($json?.text || $json.message?.text || $json?.data || '')\n  .replace(/\\n/g, ' ')\n  .replace(/https?:\\/\\/\\S+/g, \"$&\")\n  .trim()\n}}\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"topic\": \"general\",\n  \"include_raw_content\": false,\n  \"max_results\": 4\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        1536,
+        624
+      ],
+      "id": "834955c3-0a22-4796-b073-2e856dc134c6",
+      "name": "Internet search"
+    },
+    {
+      "parameters": {
+        "chatId": "=699860511",
+        "text": "={{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n\n",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "=HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1744,
+        400
+      ],
+      "id": "5e138b70-71d9-4453-b3fa-0b9185a15ecf",
+      "name": "Send a text message to admin",
+      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
+      "credentials": {
+        "telegramApi": {
+          "id": "EZL8Lnbij5C6y6hq",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.senderId }}",
+        "contextWindowLength": 25
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.4,
+      "position": [
+        1408,
+        624
+      ],
+      "id": "ff2b304b-7e68-4af0-8be1-af3168454ae2",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "ZdBU97NJixhPiEbb",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "=410770979",
+        "text": "={{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "=HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1744,
+        592
+      ],
+      "id": "f5215c56-821b-48ed-b600-915527b1d152",
+      "name": "Send a text message to technical support",
+      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
+      "credentials": {
+        "telegramApi": {
+          "id": "EZL8Lnbij5C6y6hq",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Facebook Webhook VERIFY": {
+      "main": [
+        [
+          {
+            "node": "Verify Token Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Token Check": {
+      "main": [
+        [
+          {
+            "node": "Respond Challenge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Fail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Webhook EVENTS": {
+      "main": [
+        [
+          {
+            "node": "Extract Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Comment": {
+      "main": [
+        [
+          {
+            "node": "Ignore Page Comments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ignore Page Comments": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message to admin",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message to technical support",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Facebook Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Internet search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "72930b93-032c-4bec-ad2f-faf92c944618",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
+  },
+  "id": "V0yegBvA5bF1ZkJD",
+  "tags": []
+}

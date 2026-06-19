@@ -1,4 +1,4 @@
-# AI Marketing Platform (n8n Workflow)
+# AI Marketing Platform (`workflow/AI-assistent.json`)
 This project is an **AI-powered marketing automation platform** built with **n8n**, **LangChain AI Agent**, **Ollama LLM**, and **Tavily Internet Search**.
 
 ---
@@ -37,6 +37,37 @@ Core intelligence layer:
 - Executes web search when needed
 - Uses system prompt optimized for assistant behavior
 
+# Facebook Comments Auto\-Reply (`workflow/Facebook-comments-auto-reply.json`)
+
+Purpose
+- Automatically monitor and reply to comments on Facebook posts to qualify leads, provide quick answers and route complex requests to the AI agent.
+- Log interactions to PostgreSQL and notify admins for follow\-up.
+
+How it works
+1. Facebook sends a webhook on new comment.
+2. n8n workflow receives and validates the webhook.
+3. Filters and rules determine if auto\-reply should run (contains keywords, post ID, author rules).
+4. Comment text is sent to the AI agent (LangChain + Ollama) and optionally to Tavily search for up\-to\-date info.
+5. Generated reply is posted via Facebook Graph API.
+6. Interaction is stored in `n8n_chat_memory` (Postgres) and an admin notification is sent.
+
+Requirements
+- Facebook Page access token and app webhook subscription.
+- n8n configured to accept external webhooks (valid `WEBHOOK_URL` / ngrok).
+- Environment variables: `FACEBOOK_PAGE_TOKEN`, `FACEBOOK_APP_SECRET`, plus existing `POSTGRES_*`, `OLLAMA_*`, `TAVILY_*`.
+- Import `workflow/Facebook-comments-auto-reply.json` into n8n and connect Facebook credential.
+
+Configuration & Usage
+- Import the workflow into n8n.
+- Create and link a Facebook credential using `FACEBOOK_PAGE_TOKEN`.
+- Set webhook endpoint in Facebook App to the n8n webhook URL used by the workflow.
+- Test by leaving comments on a subscribed page post; watch `logs/` for workflow events.
+
+Security and best practices
+- Do not commit access tokens to the repository.
+- Mask or filter personal data in logs.
+- Respect Facebook rate limits and comment moderation policies.
+- Keep an audit trail in Postgres and rotate credentials periodically.
 ---
 
 ### 🌐 Web Search Tool

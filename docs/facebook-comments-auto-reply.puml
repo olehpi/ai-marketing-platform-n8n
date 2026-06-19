@@ -1,0 +1,134 @@
+@startuml
+
+title Facebook comments auto-reply workflow architecture
+
+' =======================
+' STYLE (C4-like clean)
+' =======================
+skinparam defaultFontSize 22
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+
+skinparam defaultFontColor black
+skinparam ArrowColor black
+
+skinparam component {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+skinparam queue {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+skinparam actor {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+skinparam nodesep 4
+skinparam ranksep 4
+
+top to bottom direction
+
+
+' =======================
+' ACTOR
+' =======================
+actor "Facebook Platform" as Facebook
+
+
+' =======================
+' LAYER 1: API / INGRESS
+' =======================
+package "API Layer" {
+  component "Facebook Webhook\nVERIFY\nGET /facebook-comments" as WebhookVerify
+  component "Facebook Webhook\nEVENTS\nPOST /facebook-comments" as WebhookEvents
+
+  WebhookVerify -[hidden]down-> WebhookEvents
+}
+
+
+' =======================
+' LAYER 2: WEBHOOK VERIFICATION
+' =======================
+package "Verification Flow" {
+  component "Verify Token\nCheck" as VerifyCheck
+  component "Respond\nChallenge" as RespondChallenge
+  component "Respond\nFail" as RespondFail
+
+  VerifyCheck -[hidden]down-> RespondChallenge
+  RespondChallenge -[hidden]down-> RespondFail
+}
+
+
+' =======================
+' LAYER 3: EVENT PROCESSING
+' =======================
+package "Event Processing" {
+  component "Extract\nComment" as ExtractComment
+  component "Ignore Page\nComments" as IgnorePageComments
+
+  ExtractComment -[hidden]down-> IgnorePageComments
+}
+
+
+' =======================
+' LAYER 4: AI ORCHESTRATION
+' =======================
+package "AI Orchestration" {
+  component "AI Agent" as AIAgent
+  component "Ollama Chat\nModel\nqwen3.5:9b" as Ollama
+  component "Internet\nSearch" as InternetSearch
+  component "Postgres Chat\nMemory" as PgMemory
+
+  AIAgent -[hidden]down-> Ollama
+  Ollama -[hidden]down-> InternetSearch
+  InternetSearch -[hidden]down-> PgMemory
+}
+
+
+' =======================
+' LAYER 5: OUTBOUND ACTIONS
+' =======================
+package "Outbound Actions" {
+  component "Send a text\nmessage" as TelegramReply
+  component "Send a text\nmessage to admin" as TelegramAdmin
+  component "Send a text\nmessage to technical\nsupport" as TelegramSupport
+  component "Facebook\nReply" as FacebookReply
+
+  TelegramReply -[hidden]down-> TelegramAdmin
+  TelegramAdmin -[hidden]down-> TelegramSupport
+  TelegramSupport -[hidden]down-> FacebookReply
+}
+
+
+' =======================
+' FLOWS
+' =======================
+Facebook --> WebhookVerify : verification request
+Facebook --> WebhookEvents : comment event
+
+WebhookVerify --> VerifyCheck
+VerifyCheck --> RespondChallenge : token OK
+VerifyCheck --> RespondFail : token mismatch
+
+WebhookEvents --> ExtractComment
+ExtractComment --> IgnorePageComments : parsed payload
+IgnorePageComments --> AIAgent : accepted comment
+
+AIAgent --> Ollama : language model
+AIAgent --> InternetSearch : tool
+AIAgent --> PgMemory : memory
+
+AIAgent --> TelegramReply : output
+AIAgent --> TelegramAdmin : output
+AIAgent --> TelegramSupport : output
+AIAgent --> FacebookReply : output
+
+@enduml
