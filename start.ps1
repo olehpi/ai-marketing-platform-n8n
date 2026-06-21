@@ -80,7 +80,7 @@ Write-Host "[2/5] Starting ngrok..." -ForegroundColor Yellow
 Start-Service "ngrok" "ngrok http 5678"
 
 do {
-    Start-Sleep 0.00000000000000000002
+    Start-Sleep 0.2
     try {
         $resp = Invoke-RestMethod "http://127.0.0.1:4040/api/tunnels"
         $ready = $resp.tunnels.Count -gt 0
