@@ -40,8 +40,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        -1008,
-        -16
+        -4768,
+        -448
       ]
     },
     {
@@ -57,8 +57,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        -816,
-        -112
+        -4544,
+        -544
       ]
     },
     {
@@ -70,49 +70,9 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        -816,
-        80
+        -4544,
+        -352
       ]
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.text }}",
-        "options": {
-          "systemMessage": "=Overview:\nYou are a useful assistant.\nYou are the highly capable personal assistant. \nYour main task is to send the user's query to the appropriate tool. You should not be generating summaries — your only responsibility is to trigger the right tool.\nEach time you answer, ask if you want to discuss the terms of the advertisement.\nAlways answer in the language you were asked in!\n\nOutput Rule:\nYou MUST always return a non-empty text response.\nIf the tool's or agent's output is unavailable or empty:\nRequest the model to prepare a polite response for the user explaining that you couldn't find the answer.\n\nTools: Internet search.  Use this tool to search the web. Use Internet search ONLY if user query is not empty. Never call tools with empty input.\n"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 3.1,
-      "position": [
-        -112,
-        288
-      ],
-      "id": "ec2c9621-2179-4903-a43f-3fe5ff26f727",
-      "name": "AI Agent",
-      "alwaysOutputData": false
-    },
-    {
-      "parameters": {
-        "model": "qwen3.5:9b",
-        "options": {
-          "numCtx": 8192
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
-      "typeVersion": 1,
-      "position": [
-        -208,
-        560
-      ],
-      "id": "313a094d-2115-486d-8757-fe0ecdc0ba5b",
-      "name": "Ollama Chat Model",
-      "credentials": {
-        "ollamaApi": {
-          "id": "pIqtOWtJZu0eo70k",
-          "name": "Ollama account"
-        }
-      }
     },
     {
       "parameters": {
@@ -126,8 +86,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        464,
-        -112
+        -2288,
+        -128
       ],
       "id": "e317805b-c8dc-486e-b50b-50ed77d6f7e4",
       "name": "Send a text message",
@@ -141,25 +101,6 @@
     },
     {
       "parameters": {
-        "toolDescription": "=Makes an HTTP request and returns the response data",
-        "method": "POST",
-        "url": "https://api.tavily.com/search",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n    \"api_key\": \"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\",\n  \"query\": \"{{($json?.text || $json.message?.text || $json?.data || '')\n  .replace(/\\n/g, ' ')\n  .replace(/https?:\\/\\/\\S+/g, \"$&\")\n  .trim()\n}}\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"topic\": \"general\",\n  \"include_raw_content\": false,\n  \"max_results\": 4\n} ",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.4,
-      "position": [
-        160,
-        560
-      ],
-      "id": "834955c3-0a22-4796-b073-2e856dc134c6",
-      "name": "Internet search"
-    },
-    {
-      "parameters": {
         "chatId": "=699860511",
         "text": "={{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n\n",
         "additionalFields": {
@@ -170,8 +111,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        464,
-        96
+        -2288,
+        64
       ],
       "id": "5e138b70-71d9-4453-b3fa-0b9185a15ecf",
       "name": "Send a text message to admin",
@@ -180,27 +121,6 @@
         "telegramApi": {
           "id": "EZL8Lnbij5C6y6hq",
           "name": "Telegram account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $json.senderId || $json.sender_id}}",
-        "contextWindowLength": 25
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
-      "typeVersion": 1.4,
-      "position": [
-        -16,
-        576
-      ],
-      "id": "ff2b304b-7e68-4af0-8be1-af3168454ae2",
-      "name": "Postgres Chat Memory",
-      "credentials": {
-        "postgres": {
-          "id": "ZdBU97NJixhPiEbb",
-          "name": "Postgres account"
         }
       }
     },
@@ -216,8 +136,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        464,
-        320
+        -2288,
+        240
       ],
       "id": "f5215c56-821b-48ed-b600-915527b1d152",
       "name": "Send a text message to technical support",
@@ -231,62 +151,28 @@
     },
     {
       "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "2a2ae91b-1efc-49da-86c7-d36ffe0b416f",
-              "leftValue": "={{ $json.body.entry[0].messaging !== undefined }}",
-              "rightValue": "=true",
-              "operator": {
-                "type": "boolean",
-                "operation": "true",
-                "singleValue": true
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        -592,
-        352
-      ],
-      "id": "d5804928-2c15-4563-b576-61c397449aee",
-      "name": "If"
-    },
-    {
-      "parameters": {
-        "jsCode": "const change = $json.body.entry[0].changes[0].value;\n\nreturn [{\n  json: {\n    type: \"comment\",\n    comment_id: change.comment_id,\n    post_id: change.post_id,\n    sender_id: change.from.id,\n    text: change.message\n  }\n}];"
+        "jsCode": "const change = $json.body.entry[0].changes[0].value;\n\nreturn [{\n  json: {\n    senderId: change.from.id,\n    output: change.message,\n          \n    type: \"comment\",\n    commentId: change.comment_id,\n    postId: change.post_id,\n  }\n}];"
       },
       "id": "0e2eee63-d5de-4f66-9f6d-387030564552",
       "name": "Extract Post Comment",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -416,
-        416
+        -3456,
+        288
       ]
     },
     {
       "parameters": {
-        "jsCode": "const msg = $json.body.entry[0].messaging[0];\n\n// Only process real user messages\nif (!msg.message || !msg.message.text) {\n  return []; // ignore delivery/read events\n}\n\nreturn [\n  {\n    json: {\n      senderId: msg.sender.id,\n      text: msg.message.text,\n      messageId: msg.message.mid,\n      pageId: msg.recipient.id,\n      timestamp: msg.timestamp\n    }\n  }\n];"
+        "jsCode": "const msg = $json.body.entry[0].messaging[0];\n\n// Only process real user messages\nif (!msg.message || !msg.message.text) {\n  return []; // ignore delivery/read events\n}\n\nreturn [\n  {\n    json: {\n      senderId: msg.sender.id,\n      recipientId: msg.recipient.id,\n      output: msg.message.text,      \n      messageId: msg.message.mid,\n      timestamp: msg.timestamp\n    }\n  }\n];"
       },
       "id": "e9716aa1-8c23-4723-a055-f3fe7a81ad9d",
       "name": "Extract Prvate Comment",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -416,
-        224
+        -3456,
+        96
       ]
     },
     {
@@ -317,8 +203,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        752,
-        640
+        -2064,
+        704
       ]
     },
     {
@@ -330,8 +216,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -1200,
-        368
+        -4576,
+        192
       ],
       "id": "3ff7bb64-4b6d-4f6f-b252-21f64c66a0d4",
       "name": "Facebook Webhook Events",
@@ -346,45 +232,12 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        -1200,
-        -16
+        -4992,
+        -448
       ],
       "id": "8ed1d9fb-fbdf-438a-92cd-5357065b8336",
       "name": "Facebook Webhook Verify",
       "webhookId": "6c71b20c-be18-4ca6-88bf-5499fe2921ce"
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 3
-          },
-          "conditions": [
-            {
-              "id": "2a2ae91b-1efc-49da-86c7-d36ffe0b416f",
-              "leftValue": "={{ $('Check Message Type').item.json.messageType }}",
-              "rightValue": "private message",
-              "operator": {
-                "type": "string",
-                "operation": "equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.3,
-      "position": [
-        480,
-        528
-      ],
-      "id": "93167798-ddee-405d-8143-3653000c7f1a",
-      "name": "If1"
     },
     {
       "parameters": {
@@ -400,13 +253,9 @@
           ]
         },
         "sendBody": true,
-        "specifyBody": "=json",
-        "bodyParameters": {
-          "parameters": [
-            {}
-          ]
-        },
-        "jsonBody": "={\n  \"recipient\": {\n    \"id\": \"{{ $('Facebook Webhook Events').item.json.body?.entry?.[0]?.messaging?.[0]?.sender?.id }}\"\n  },\n  \"message\": {\n    \"text\": \"{{ $json.output.replace(/\\n/g, '\\\\n') }}\"\n  }\n}",
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{\n{\n  recipient: {\n    id: $('Classify Event').item.json.isSelfMessage\n      ? $('Extract Prvate Comment').item.json.recipientId\n      : $('Extract Prvate Comment').item.json.senderId\n  },\n  message: {\n    text:\n      ($('Classify Event').item.json.isSelfMessage ? 'SelfMessage: ' : '') +\n      $json.output\n    }\n} \n}}",
         "options": {}
       },
       "id": "6c3d6db4-7424-41c6-865b-d80749398305",
@@ -414,9 +263,57 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        736,
-        416
-      ]
+        -1840,
+        192
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2a2ae91b-1efc-49da-86c7-d36ffe0b416f",
+              "leftValue": "={{ $json.messageType ===\"private message\" }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -3680,
+        192
+      ],
+      "id": "d5804928-2c15-4563-b576-61c397449aee",
+      "name": "Route Event"
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $json.body?.entry?.[0]?.messaging?.[0] || {};\n\nif (msg) {\n  const isSelfMessage = $input.first().json.isSelfMessage;\n  const isEcho = msg.message?.is_echo;\n\n  const isDelivery = !!msg.delivery\n  const isRead = !!msg.read\n  // System message\n  // const isPostback = !!msg.postback;\n  $json.isIgnoredMessage \n    = (isEcho && !isSelfMessage) || isDelivery || isRead\n}\n\n$json.messageType = msg.message ? \"private message\" : \"post message\";\n\nreturn [{ json: $json }] "
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4128,
+        192
+      ],
+      "id": "a47f7371-9e40-47e2-92dd-88bac02f4c18",
+      "name": "Classify Event"
     },
     {
       "parameters": {
@@ -430,7 +327,7 @@
           "conditions": [
             {
               "id": "8e00dac3-a299-4bde-a671-ba9adc024a7c",
-              "leftValue": "={{ $json.ignoredMessage }}",
+              "leftValue": "={{ $json.isIgnoredMessage }}",
               "rightValue": "",
               "operator": {
                 "type": "boolean",
@@ -446,27 +343,232 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -816,
-        368
+        -3904,
+        192
       ],
       "id": "88f6068e-e0d0-4977-85d6-f98499e16b46",
-      "name": "Separete Ignore Type Message"
+      "name": "Filter Ignored Messages"
     },
     {
       "parameters": {
-        "jsCode": "const msg = $json.body.entry[0].messaging[0] || {}\n\nconst isSelfMessage = (msg.sender?.id === \"894775487062575\") &&(msg.recipient?.id === \"27464544083158101\")\n\nconst isEcho =msg.message?.is_echo && !isSelfMessage;\n\nconst isDelivery = !!msg.delivery\nconst isRead = !!msg.read\n// System message\n// const isPostback = !!msg.postback;\nconst ignoredMessage = isEcho || isDelivery || isRead\nconst messageType = msg.message ? \"private message\" : \"post message\";\n  \n$json.ignoredMessage = ignoredMessage \n$json.messageType = messageType\n\nreturn [{ json: $json }] "
+        "jsCode": "function isSelfMessage(msg) {\n  // const OWNER_APP_ID = \"263902037430900\"\n  const SENDER_ID = \"894775487062575\"\n  const RECIPIENT_ID = \"27464544083158101\"\n  const DOUBLE_ECHO_MARKER = \"SelfMessage: \"\n  const isDoubleEchoMMarker \n    = msg.message?.text?.includes(DOUBLE_ECHO_MARKER)\n  return (\n    msg.sender?.id === SENDER_ID \n    && msg.recipient?.id === RECIPIENT_ID \n    && !isDoubleEchoMMarker\n    // && String(msg.message?.app_id) === OWNER_APP_ID\n  );\n}\n\nconst msg = $json.body.entry?.[0]?.messaging?.[0] || {};\n$json.isSelfMessage = msg.sender?.id && isSelfMessage(msg);\n\nreturn [{ json: $json }] "
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1024,
-        368
+        -4352,
+        192
       ],
-      "id": "a497730e-eb89-4e7d-947a-af52018d7e82",
-      "name": "Check Message Type"
+      "id": "4f256c3a-c201-4c54-a0cf-ab8f37e810f0",
+      "name": "Classify Self Message"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=={{\n    {\n      senderId: $json.senderId,\n      output: $json.output\n    }\n}}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -3200,
+        176
+      ],
+      "id": "422ce093-a632-4cd9-8a86-3f465adfb0f2",
+      "name": "Prepare Agent Input"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=={{ { output: $json.output } }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2816,
+        176
+      ],
+      "id": "f8858a5e-192f-4c51-92e4-31aaa4831fbe",
+      "name": "Prepare Agent Output",
+      "alwaysOutputData": false,
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VaSy0zkQ3GT3c9U5",
+          "mode": "id",
+          "cachedResultUrl": "/workflow/VaSy0zkQ3GT3c9U5"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [
+            ""
+          ],
+          "schema": [
+            {
+              "id": "",
+              "displayName": "",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -2992,
+        176
+      ],
+      "id": "abff5d3c-17d2-4fb0-9d78-d51ca3d405e4",
+      "name": "Call 'Agent workflow'"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2a2ae91b-1efc-49da-86c7-d36ffe0b416f",
+              "leftValue": "={{ $('Classify Event').item.json.messageType }}",
+              "rightValue": "private message",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2304,
+        464
+      ],
+      "id": "93167798-ddee-405d-8143-3653000c7f1a",
+      "name": "Route Reply Type"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec6722ee-d0b2-4824-95b5-7fc7616002c0",
+              "name": "facebookPayload",
+              "value": "={{\n{\n  recipient: {\n    id: $('Classify Event').item.json.isSelfMessage\n      ? $('Extract Prvate Comment').item.json.recipientId\n      : $('Extract Prvate Comment').item.json.senderId\n  },\n  message: {\n    text:\n      ($('Classify Event').item.json.isSelfMessage ? 'SelfMessage: ' : '')\n      + $json.output\n  }\n}\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -2048,
+        336
+      ],
+      "id": "c6effd2d-0734-4f63-82b0-6e9f401fe82b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v23.0/me/messages",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "access_token",
+              "value": "EAAVa9qJ8WeEBR7wKyr7gk9igvKRZCrkErHndClQPFOzJU2DVxtB5O10C8y4ZBrqOzBh5bhbj2HDZC49NZBtmeMG6OuWvOZAKb5ioAyl0I2Q3pm9wEfQsKSm8KpnZC6yHuJV7U1hvvjXprcCacwZA7sJ2V3Ckgp3zkGM1cV0Rn8ppLZCZC5FcPHf5bhFZCWbBkLgbgkvUWKVCJgvgZDZD"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.facebookPayload }}",
+        "options": {}
+      },
+      "id": "8291a358-9174-4f5d-b7fd-d1d2f62830f1",
+      "name": "Facebook Reply to Private Comments1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -1840,
+        480
+      ]
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "Facebook Webhook Events": [
+      {
+        "json": {
+          "headers": {
+            "host": "guidance-anchor-pants.ngrok-free.dev",
+            "user-agent": "facebookexternalua",
+            "content-length": "313",
+            "accept": "*/*",
+            "accept-encoding": "deflate, gzip",
+            "content-type": "application/json",
+            "facebook-api-version": "v25.0",
+            "x-forwarded-for": "2a03:2880:31ff:a::",
+            "x-forwarded-host": "guidance-anchor-pants.ngrok-free.dev",
+            "x-forwarded-proto": "https",
+            "x-hub-signature": "sha1=ab9906fc31ab5ed4b2315e8b9701372f14bf279c",
+            "x-hub-signature-256": "sha256=5c2a17efdbf7e2b2879f08e954bd4cbfc7b2b0c0f00664d1472e2d43666b8ea8"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "object": "page",
+            "entry": [
+              {
+                "time": 1782385523870,
+                "id": "894775487062575",
+                "messaging": [
+                  {
+                    "sender": {
+                      "id": "27404017755896866"
+                    },
+                    "recipient": {
+                      "id": "894775487062575"
+                    },
+                    "timestamp": 1782385520404,
+                    "message": {
+                      "mid": "m_N7N2sSLhQnueXNyMQscb2KKSji4rARWRQoxyiAuyF4o2vetb18TT2LtL1UhUQEp07yGQgojvZ41oLKmfz126uQ",
+                      "text": "when will you be free!"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "webhookUrl": "https://guidance-anchor-pants.ngrok-free.dev/webhook/vpost",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
   "connections": {
     "Verify Token Check": {
       "main": [
@@ -486,7 +588,119 @@
         ]
       ]
     },
-    "AI Agent": {
+    "Extract Post Comment": {
+      "main": [
+        [
+          {
+            "node": "Prepare Agent Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Prvate Comment": {
+      "main": [
+        [
+          {
+            "node": "Prepare Agent Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Webhook Events": {
+      "main": [
+        [
+          {
+            "node": "Classify Self Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Webhook Verify": {
+      "main": [
+        [
+          {
+            "node": "Verify Token Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Facebook Reply to Topic Comment": {
+      "main": [
+        []
+      ]
+    },
+    "Route Event": {
+      "main": [
+        [
+          {
+            "node": "Extract Prvate Comment",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract Post Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Event": {
+      "main": [
+        [
+          {
+            "node": "Filter Ignored Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Ignored Messages": {
+      "main": [
+        [
+          {
+            "node": "Route Event",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Classify Self Message": {
+      "main": [
+        [
+          {
+            "node": "Classify Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Agent Input": {
+      "main": [
+        [
+          {
+            "node": "Call 'Agent workflow'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Agent Output": {
       "main": [
         [
           {
@@ -505,113 +719,29 @@
             "index": 0
           },
           {
-            "node": "If1",
+            "node": "Route Reply Type",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Ollama Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Internet search": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Postgres Chat Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If": {
+    "Call 'Agent workflow'": {
       "main": [
         [
           {
-            "node": "Extract Prvate Comment",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Extract Post Comment",
+            "node": "Prepare Agent Output",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Extract Post Comment": {
+    "Route Reply Type": {
       "main": [
         [
           {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract Prvate Comment": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Facebook Webhook Events": {
-      "main": [
-        [
-          {
-            "node": "Check Message Type",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Facebook Webhook Verify": {
-      "main": [
-        [
-          {
-            "node": "Verify Token Check",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If1": {
-      "main": [
-        [
-          {
-            "node": "Facebook Reply to Private Comments",
+            "node": "Edit Fields",
             "type": "main",
             "index": 0
           }
@@ -625,28 +755,16 @@
         ]
       ]
     },
-    "Facebook Reply to Topic Comment": {
-      "main": [
-        []
-      ]
-    },
-    "Separete Ignore Type Message": {
+    "Edit Fields": {
       "main": [
         [
           {
-            "node": "If",
+            "node": "Facebook Reply to Private Comments",
             "type": "main",
             "index": 0
-          }
-        ],
-        []
-      ]
-    },
-    "Check Message Type": {
-      "main": [
-        [
+          },
           {
-            "node": "Separete Ignore Type Message",
+            "node": "Facebook Reply to Private Comments1",
             "type": "main",
             "index": 0
           }
@@ -662,7 +780,7 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "ef63209a-c61c-4c87-9ee6-2cd59f0c4919",
+  "versionId": "f0684f20-9ba8-40fd-9025-fffcb4bc6571",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"

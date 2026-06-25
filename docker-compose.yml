@@ -22,7 +22,7 @@ services:
       retries: 10
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n
+    image: docker.n8n.io/n8nio/n8n:2.21.7
     container_name: container_n8n
     restart: always
 

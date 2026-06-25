@@ -1,0 +1,233 @@
+{
+  "name": "Agent workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=Overview:\nYou are a useful assistant.\nYou are the highly capable personal assistant. \nYour main task is to send the user's query to the appropriate tool. You should not be generating summaries — your only responsibility is to trigger the right tool.\nEach time you answer, ask if you want to discuss the terms of the advertisement.\nAlways answer in the language you were asked in!\n\nOutput Rule:\nYou MUST always return a non-empty text response.\nIf the tool's or agent's output is unavailable or empty:\nRequest the model to prepare a polite response for the user explaining that you couldn't find the answer.\n\nTools: Internet search.  Use this tool to search the web. Use Internet search ONLY if user query is not empty. Never call tools with empty input.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -48,
+        -48
+      ],
+      "id": "80a1caf4-ed67-4636-a2d7-48a7a3e47152",
+      "name": "AI Agent",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "model": "qwen3.5:9b",
+        "options": {
+          "numCtx": 8192
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        176
+      ],
+      "id": "d7ec15b8-fd62-4a07-a4d3-f3894d4f1cfc",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "pIqtOWtJZu0eo70k",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "=Makes an HTTP request and returns the response data",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{($json?.output || '')}}\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"topic\": \"general\",\n  \"include_raw_content\": false,\n  \"max_results\": 4\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        160,
+        176
+      ],
+      "id": "8f468649-a2d0-449c-a04d-a5d2c4ddb12b",
+      "name": "Internet search"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.senderId}}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.4,
+      "position": [
+        32,
+        176
+      ],
+      "id": "f88f7136-6a97-4ad6-bb4c-119a3e53834c",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "ZdBU97NJixhPiEbb",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"output\": \"{{ $json.output\n           .replace(/\\n/g, '\\\\n')\n           .replace(/\"/g, '\\\\\"')\n           .replace(/\\r/g, \"\")\n           .replace(/[\\u0000-\\u001F]/g, \"\")\n           .trim()\n           }}\",\n  \"senderId\": \"{{ $json.senderId }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -320,
+        -48
+      ],
+      "id": "027987df-69ce-4dcc-9cd6-c47453505be2",
+      "name": "Normalize Input"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"output\": \"{{ $json.output \n? $json.output\n          .replace(/\\n/g, '\\\\n')\n          .replace(/\"/g, '\\\\\"')\n          .replace(/\\r/g, \"\")\n          .replace(/[\\u0000-\\u001F]/g, \"\")\n          .trim()\n: \n  'Sorry, I couldn\\'t find an answer for your request.' }}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        288,
+        -48
+      ],
+      "id": "c85a66dd-c158-460b-aaca-01c0c1fb99e7",
+      "name": "Normalize Output"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -48
+      ],
+      "id": "046a2925-812f-47e5-b9ba-6c37bb747ad8",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n\"output\": \"Hello123345!\",\n\"senderId\": \"27404017755896866\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -512,
+        -48
+      ],
+      "id": "eee67e8e-198a-4745-acf6-9994f62e5f8f",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Normalize Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Internet search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Output": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "38cef28d-f576-4ef7-97a6-0538586700d4",
+  "meta": {
+    "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
+  },
+  "id": "VaSy0zkQ3GT3c9U5",
+  "tags": []
+}
