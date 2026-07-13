@@ -1,5 +1,5 @@
 {
-  "name": "AI-assistent",
+  "name": "Telegram-comments-auto-reply",
   "nodes": [
     {
       "parameters": {
@@ -12,15 +12,15 @@
       "typeVersion": 1.3,
       "position": [
         -1088,
-        -112
+        -128
       ],
       "id": "545d5607-d8cf-454a-864a-27024e79131b",
       "name": "Telegram Trigger",
       "webhookId": "201a92a4-a0d2-4f90-8451-0e782d29bcfd",
       "credentials": {
         "telegramApi": {
-          "id": "EZL8Lnbij5C6y6hq",
-          "name": "Telegram account"
+          "id": "8q3AXOJieTvIg4cz",
+          "name": "Telegram AIVONA"
         }
       }
     },
@@ -110,8 +110,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -864,
-        -128
+        -944,
+        -144
       ],
       "id": "a5c04170-140d-4de4-b0ff-f08b3836a248",
       "name": "Switch"
@@ -133,50 +133,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -416,
-        -304
+        -704,
+        -160
       ],
       "id": "c41a103a-79d7-4036-ae03-3496bf1f74d9",
       "name": "Edit Fields"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "={{ $json.text ?? $json.data ?? $json.output }} ",
-        "options": {
-          "systemMessage": "Overview:\nYou are a useful assistant.\nYou are the highly capable personal assistant. \nYour main task is to send the user's query to the appropriate tool. You should not be generating summaries — your only responsibility is to trigger the right tool.\nEach time you answer, ask if you want to discuss the terms of the advertisement.\nAlways answer in the language you were asked in!\n\nOutput Rule:\nYou MUST always return a non-empty text response.\nIf the tool's or agent's output is unavailable or empty:\nRequest the model to prepare a polite response for the user explaining that you couldn't find the answer.\n\nTools: Internet search.  Use this tool to search the web. Use Internet search ONLY if user query is not empty. Never call tools with empty input.\n\n"
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 3.1,
-      "position": [
-        -136,
-        -112
-      ],
-      "id": "01d5cca7-3470-473d-81d6-5768ce3c66b5",
-      "name": "AI Agent"
-    },
-    {
-      "parameters": {
-        "model": "qwen3.5:9b",
-        "options": {
-          "numCtx": 8192
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
-      "typeVersion": 1,
-      "position": [
-        -192,
-        112
-      ],
-      "id": "74dd8220-7fd1-4215-900d-73c4c3cbe3bd",
-      "name": "Ollama Chat Model",
-      "credentials": {
-        "ollamaApi": {
-          "id": "pIqtOWtJZu0eo70k",
-          "name": "Ollama account"
-        }
-      }
     },
     {
       "parameters": {
@@ -190,52 +151,18 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        272,
-        -304
+        48,
+        32
       ],
       "id": "8f216825-5598-43b8-9b6d-3819e3490ad3",
       "name": "Send a text message",
       "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
       "credentials": {
         "telegramApi": {
-          "id": "EZL8Lnbij5C6y6hq",
-          "name": "Telegram account"
+          "id": "8q3AXOJieTvIg4cz",
+          "name": "Telegram AIVONA"
         }
       }
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Telegram Trigger').item.json.message.from.id }}",
-        "contextWindowLength": 1000
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.4,
-      "position": [
-        -1088,
-        -512
-      ],
-      "id": "05b45616-5b04-4778-adae-665238c444ab",
-      "name": "Simple Memory"
-    },
-    {
-      "parameters": {
-        "toolDescription": "=Makes an HTTP request and returns the response data",
-        "method": "POST",
-        "url": "https://api.tavily.com/search",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n    \"api_key\": \"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\",\n  \"query\": \"{{($json?.text || $json.message?.text || $json?.data || '')\n  .replace(/\\n/g, ' ')\n  .replace(/https?:\\/\\/\\S+/g, \"$&\")\n  .trim()\n}}\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"topic\": \"general\",\n  \"include_raw_content\": false,\n  \"max_results\": 4\n} ",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequestTool",
-      "typeVersion": 4.4,
-      "position": [
-        64,
-        112
-      ],
-      "id": "b280d024-4a91-4666-ad95-87dda248bb66",
-      "name": "Internet search"
     },
     {
       "parameters": {
@@ -249,62 +176,16 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        272,
-        -112
+        48,
+        176
       ],
       "id": "23bd1aec-1bf8-4e78-af17-f7bd263fef41",
       "name": "Send a text message to admin",
       "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
       "credentials": {
         "telegramApi": {
-          "id": "EZL8Lnbij5C6y6hq",
-          "name": "Telegram account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "=410770979",
-        "text": "=🆔 chat_id: {{ $('Telegram Trigger').item.json.message.chat.id }}\n👤 {{ $('Telegram Trigger').item.json.message.from.first_name }} {{ $('Telegram Trigger').item.json.message.from.last_name }}: {{ $('Telegram Trigger').item.json.message.text }}\n🤖 AI-assistent: {{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n\nReply to https://t.me/{{ $('Telegram Trigger').item.json.message.from.username }}\n",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "=HTML"
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        272,
-        80
-      ],
-      "id": "985fd2f0-adf3-42f1-b15b-5e34618064d7",
-      "name": "Send a text message to V",
-      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
-      "credentials": {
-        "telegramApi": {
-          "id": "EZL8Lnbij5C6y6hq",
-          "name": "Telegram account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Telegram Trigger').item.json.message.from.id }}",
-        "contextWindowLength": 25
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
-      "typeVersion": 1.4,
-      "position": [
-        -64,
-        112
-      ],
-      "id": "9cc5dc03-383c-44e1-a56f-f5eb51c0ed6f",
-      "name": "Postgres Chat Memory",
-      "credentials": {
-        "postgres": {
-          "id": "ZdBU97NJixhPiEbb",
-          "name": "Postgres account"
+          "id": "8q3AXOJieTvIg4cz",
+          "name": "Telegram AIVONA"
         }
       }
     },
@@ -319,8 +200,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -640,
-        -112
+        -784,
+        0
       ],
       "id": "0ca7c139-3231-43b1-9cfc-a6596d8e472b",
       "name": "Get an audio file",
@@ -341,8 +222,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -640,
-        80
+        -784,
+        176
       ],
       "id": "91959e7b-14b7-4888-ae5c-6c421025ff0c",
       "name": "Get a video file",
@@ -374,8 +255,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -416,
-        -112
+        -624,
+        0
       ],
       "id": "afc1e9fa-6121-4c46-bc56-f69033c49c0c",
       "name": "HTTP Request: Whisper ASR for an audio-message option"
@@ -400,11 +281,121 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -416,
-        80
+        -624,
+        176
       ],
       "id": "eafe2969-07e5-4a26-9716-d7abb935b178",
       "name": "HTTP Request for an video-message option"
+    },
+    {
+      "parameters": {
+        "chatId": "=410770979",
+        "text": "=🆔 chat_id: {{ $('Telegram Trigger').item.json.message.chat.id }}\n👤 {{ $('Telegram Trigger').item.json.message.from.first_name }} {{ $('Telegram Trigger').item.json.message.from.last_name }}: {{ $('Telegram Trigger').item.json.message.text }}\n🤖 AI-assistent: {{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n\nReply to https://t.me/{{ $('Telegram Trigger').item.json.message.from.username }}\n",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "=HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        48,
+        352
+      ],
+      "id": "985fd2f0-adf3-42f1-b15b-5e34618064d7",
+      "name": "Send a text message to technical support",
+      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
+      "credentials": {
+        "telegramApi": {
+          "id": "8q3AXOJieTvIg4cz",
+          "name": "Telegram AIVONA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=={{\n    {\n      senderId: $json.senderId,\n      output: $json.output,\n      isDeleteRequest: $json.isDeleteRequest \n    }\n}}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -304,
+        -160
+      ],
+      "id": "65824a4f-fdf9-4662-a95a-a658af039d26",
+      "name": "Prepare Agent Input"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=={{ { output: $json.output } }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        48,
+        -160
+      ],
+      "id": "42f00981-ac8e-4878-9a50-d632d73ff88a",
+      "name": "Prepare Agent Output",
+      "alwaysOutputData": false,
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VaSy0zkQ3GT3c9U5",
+          "mode": "id",
+          "cachedResultUrl": "/workflow/VaSy0zkQ3GT3c9U5"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [
+            ""
+          ],
+          "schema": [
+            {
+              "id": "",
+              "displayName": "",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -128,
+        -160
+      ],
+      "id": "9339f54f-cfec-44f8-9ad9-c22c5c436769",
+      "name": "Call 'Agent workflow'"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\n\nconst output =\n  item.text ||\n  item.data ||\n  item.output ||\n  item.message?.text ||\n  \"\";\n\nconst isDeleteRequest =\n  output.toLowerCase().includes(\"delete my data\");\n\nconst senderId =\n$('Telegram Trigger').first().json.message.from.id\nreturn [{\n  json: {\n    senderId,\n    output,\n    isDeleteRequest\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        -160
+      ],
+      "id": "187a98a5-148e-43b3-a17f-388b137733e8",
+      "name": "Classify Delete User Data Event"
     }
   ],
   "pinData": {},
@@ -449,67 +440,8 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Classify Delete User Data Event",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Ollama Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent": {
-      "main": [
-        [
-          {
-            "node": "Send a text message",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Send a text message to admin",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Send a text message to V",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Simple Memory": {
-      "ai_memory": [
-        []
-      ]
-    },
-    "Internet search": {
-      "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Postgres Chat Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
             "index": 0
           }
         ]
@@ -541,7 +473,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Classify Delete User Data Event",
             "type": "main",
             "index": 0
           }
@@ -552,7 +484,61 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Classify Delete User Data Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Agent Input": {
+      "main": [
+        [
+          {
+            "node": "Call 'Agent workflow'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Agent workflow'": {
+      "main": [
+        [
+          {
+            "node": "Prepare Agent Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Delete User Data Event": {
+      "main": [
+        [
+          {
+            "node": "Prepare Agent Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Agent Output": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message to admin",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message to technical support",
             "type": "main",
             "index": 0
           }
@@ -565,7 +551,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "fa2bf9c0-bfc2-487a-a6e6-88f92bc6b6b5",
+  "versionId": "3b0ea128-e466-4526-8815-84f4c7f4802c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"

@@ -41,14 +41,29 @@ services:
       - DB_POSTGRESDB_USER=${POSTGRES_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
 
+      # https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables/logs
+      - N8N_LOG_OUTPUT=file
+      - N8N_LOG_FORMAT=json
+      - N8N_LOG_FILE_LOCATION=/home/node/.n8n/logs/n8n.log
+      - N8N_LOG_FILE_SIZE_MAX=16  # in MB
+      - N8N_LOG_FILE_COUNT_MAX=20
+
       # n8n settings
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_RUNNERS_ENABLED=true
+
+      # Executions https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables/executions
+      - EXECUTIONS_DATA_PRUNE=true
+      - EXECUTIONS_DATA_MAX_AGE=240 # in hours
+      - EXECUTIONS_DATA_PRUNE_MAX_COUNT=100
+      - EXECUTIONS_DATA_HARD_DELETE_BUFFER=24
+      - EXECUTIONS_DATA_PRUNE_HARD_DELETE_INTERVAL=120
 
       # Webhook
       - N8N_HOST=${N8N_HOST}
       - N8N_PROTOCOL=${N8N_PROTOCOL}
       - WEBHOOK_URL=${WEBHOOK_URL}
+      - N8N_WORKFLOW_HISTORY_PRUNE_TIME=120 # in hours
 
     volumes:
       - n8n_data:/home/node/.n8n

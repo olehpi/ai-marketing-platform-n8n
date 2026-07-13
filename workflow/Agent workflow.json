@@ -4,7 +4,7 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.output }}",
+        "text": "={{ $('Normalize Input').item.json.output }}",
         "options": {
           "systemMessage": "=Overview:\nYou are a useful assistant.\nYou are the highly capable personal assistant. \nYour main task is to send the user's query to the appropriate tool. You should not be generating summaries — your only responsibility is to trigger the right tool.\nEach time you answer, ask if you want to discuss the terms of the advertisement.\nAlways answer in the language you were asked in!\n\nOutput Rule:\nYou MUST always return a non-empty text response.\nIf the tool's or agent's output is unavailable or empty:\nRequest the model to prepare a polite response for the user explaining that you couldn't find the answer.\n\nTools: Internet search.  Use this tool to search the web. Use Internet search ONLY if user query is not empty. Never call tools with empty input.\n"
         }
@@ -12,8 +12,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -48,
-        -48
+        -448,
+        -64
       ],
       "id": "80a1caf4-ed67-4636-a2d7-48a7a3e47152",
       "name": "AI Agent",
@@ -29,8 +29,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        -96,
-        176
+        -480,
+        128
       ],
       "id": "d7ec15b8-fd62-4a07-a4d3-f3894d4f1cfc",
       "name": "Ollama Chat Model",
@@ -48,14 +48,14 @@
         "url": "https://api.tavily.com/search",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{($json?.output || '')}}\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"topic\": \"general\",\n  \"include_raw_content\": false,\n  \"max_results\": 4\n} ",
+        "jsonBody": "={{\n  {\n    api_key: \"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\",\n    query: ($json?.output || ''),\n    search_depth: \"basic\",\n    include_answer: true,\n    topic: \"general\",\n    include_raw_content: false,\n    max_results: 4\n  }\n}}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        160,
-        176
+        -192,
+        128
       ],
       "id": "8f468649-a2d0-449c-a04d-a5d2c4ddb12b",
       "name": "Internet search"
@@ -63,13 +63,13 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "={{ $json.senderId}}"
+        "sessionKey": "={{ $('Normalize Input').item.json.senderId }}"
       },
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.4,
       "position": [
-        32,
-        176
+        -336,
+        128
       ],
       "id": "f88f7136-6a97-4ad6-bb4c-119a3e53834c",
       "name": "Postgres Chat Memory",
@@ -83,14 +83,14 @@
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"output\": \"{{ $json.output\n           .replace(/\\n/g, '\\\\n')\n           .replace(/\"/g, '\\\\\"')\n           .replace(/\\r/g, \"\")\n           .replace(/[\\u0000-\\u001F]/g, \"\")\n           .trim()\n           }}\",\n  \"senderId\": \"{{ $json.senderId }}\"\n}",
+        "jsonOutput": "={\n  \"output\": \"{{ $json.output\n           .replace(/\\n/g, '\\\\n')\n           .replace(/\"/g, '\\\\\"')\n           .replace(/\\r/g, \"\")\n           .replace(/[\\u0000-\\u001F]/g, \"\")\n           .trim()\n           }}\",\n  \"senderId\": \"{{ $json.senderId }}\",\n  \"maxTokensCount\": 3000\n\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -320,
-        -48
+        -1152,
+        224
       ],
       "id": "027987df-69ce-4dcc-9cd6-c47453505be2",
       "name": "Normalize Input"
@@ -98,14 +98,14 @@
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"output\": \"{{ $json.output \n? $json.output\n          .replace(/\\n/g, '\\\\n')\n          .replace(/\"/g, '\\\\\"')\n          .replace(/\\r/g, \"\")\n          .replace(/[\\u0000-\\u001F]/g, \"\")\n          .trim()\n: \n  'Sorry, I couldn\\'t find an answer for your request.' }}\"\n}\n",
+        "jsonOutput": "={\n  \"maxTokensCount\": 9000,\n  \"output\": \"{{ $json.output \n? $json.output\n          .replace(/\\n/g, '\\\\n')\n          .replace(/\"/g, '\\\\\"')\n          .replace(/\\r/g, \"\")\n          .replace(/[\\u0000-\\u001F]/g, \"\")\n          .trim()\n: \n  'Sorry, I couldn\\'t find an answer for your request.' }}\"\n}\n",
         "options": {}
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        288,
-        -48
+        16,
+        -64
       ],
       "id": "c85a66dd-c158-460b-aaca-01c0c1fb99e7",
       "name": "Normalize Output"
@@ -115,8 +115,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        480,
-        -48
+        448,
+        240
       ],
       "id": "046a2925-812f-47e5-b9ba-6c37bb747ad8",
       "name": "No Operation, do nothing"
@@ -124,19 +124,289 @@
     {
       "parameters": {
         "inputSource": "jsonExample",
-        "jsonExample": "{\n\"output\": \"Hello123345!\",\n\"senderId\": \"27404017755896866\"\n}"
+        "jsonExample": "{\n\"output\": \"Hello123345!\",\n\"senderId\": \"27404017755896866\",\n\"isDeleteRequest\" : true\n}"
       },
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -512,
+        -1424,
         -48
       ],
       "id": "eee67e8e-198a-4745-acf6-9994f62e5f8f",
       "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "474ab3bc-736d-4f4c-90eb-c34e7c740b6c",
+              "leftValue": "={{ $json.isDeleteRequest }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1152,
+        -48
+      ],
+      "id": "8cefaef0-9ea9-4bd0-b530-eb790799549f",
+      "name": "Filter Delete User Data Messages"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH deleted AS (\n    DELETE FROM n8n_chat_histories\n    WHERE session_id = '{{ $json.senderId }}'\n    RETURNING id\n)\nSELECT COUNT(*) AS count\nFROM deleted;\n\n\n-- DELETE FROM n8n_chat_histories\n-- WHERE session_id = '{{ $json.senderId }}'\n-- RETURNING id;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -960,
+        -256
+      ],
+      "id": "47b74531-f13f-417e-8ad1-8da7d57d0d3e",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "ZdBU97NJixhPiEbb",
+          "name": "Postgres account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=={{ \n    {\n        output: $json.output\n    } \n}}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -560,
+        -256
+      ],
+      "id": "f67b1bf3-841b-4cc6-a560-59be6b2e2f18",
+      "name": "Prepare Execute Output"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "474ab3bc-736d-4f4c-90eb-c34e7c740b6c",
+              "leftValue": "={{ $json.flagged }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": "=",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -704,
+        224
+      ],
+      "id": "64049a37-e6be-4b15-a5a9-22c3613934b1",
+      "name": "Moderation Content Safe Filter",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "2ysDdHOqv4vvbZW4",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/2ysDdHOqv4vvbZW4",
+          "cachedResultName": "Moderation workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "maxTokensCount": "={{ $json.maxTokensCount }}",
+            "output": "={{ $json.output }}",
+            "senderId": "={{ $('Normalize Input').item.json.senderId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "senderId",
+              "displayName": "senderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "maxTokensCount",
+              "displayName": "maxTokensCount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        -64
+      ],
+      "id": "421fbbf9-d512-4d61-9ee5-3cd790e8372c",
+      "name": "Call 'Moderation workflow' Check Output",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "2ysDdHOqv4vvbZW4",
+          "mode": "id",
+          "cachedResultUrl": "/workflow/2ysDdHOqv4vvbZW4"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "maxTokensCount": "={{ $json.maxTokensCount }}",
+            "output": "={{ $json.output }}",
+            "senderId": "={{ $json.senderId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "senderId",
+              "displayName": "senderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "maxTokensCount",
+              "displayName": "maxTokensCount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -928,
+        224
+      ],
+      "id": "fd001691-b062-4c27-bb41-df5f6740e6d1",
+      "name": "Call 'Moderation workflow' Check Input"
+    },
+    {
+      "parameters": {
+        "jsCode": "const count =  Number($input.first().json.count);\n\nreturn [{\n  json: {\n    count : count,\n    output: count === 0\n      ? 'No records were found for deletion.'\n      : `Your personal data ${count} record(s) are deleted successfully. If you have any questions, feel free to contact me.`\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        -336
+      ],
+      "id": "6cb91192-5a1c-43cc-8bb8-7718576db60d",
+      "name": "Success Result"
+    },
+    {
+      "parameters": {
+        "jsCode": "const errorItems = $input.all(1); \nif (errorItems?.length) {\n  return [{\n    json: {\n      output: \"An error occurred while deleting your data. Please try again later or contact support if the problem persists.\"\n    }\n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        -176
+      ],
+      "id": "27369fae-a7de-4726-8d6c-48976f8d9f02",
+      "name": "Error Result"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "output": "Hi! How are you?",
+          "output_copy": "Hi! Here's the plan.  We get the warhead, and we hold the world ransom... ..FOR ONE MILLION DOLLARS!",
+          "senderId": "27404017755896866",
+          "isDeleteRequest": true
+        }
+      }
+    ]
+  },
   "connections": {
     "AI Agent": {
       "main": [
@@ -186,7 +456,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Call 'Moderation workflow' Check Input",
             "type": "main",
             "index": 0
           }
@@ -197,7 +467,7 @@
       "main": [
         [
           {
-            "node": "No Operation, do nothing",
+            "node": "Call 'Moderation workflow' Check Output",
             "type": "main",
             "index": 0
           }
@@ -208,7 +478,116 @@
       "main": [
         [
           {
+            "node": "Filter Delete User Data Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Delete User Data Messages": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Success Result",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Execute Output": {
+      "main": [
+        [
+          {
+            "node": "Normalize Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Moderation Content Safe Filter": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Moderation workflow' Check Output": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Moderation workflow' Check Input": {
+      "main": [
+        [
+          {
+            "node": "Moderation Content Safe Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success Result": {
+      "main": [
+        [
+          {
+            "node": "Prepare Execute Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Result": {
+      "main": [
+        [
+          {
+            "node": "Prepare Execute Output",
             "type": "main",
             "index": 0
           }
@@ -224,8 +603,9 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "38cef28d-f576-4ef7-97a6-0538586700d4",
+  "versionId": "f04f0db5-cf8a-4a7e-82b2-914f1af6d662",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
   },
   "id": "VaSy0zkQ3GT3c9U5",

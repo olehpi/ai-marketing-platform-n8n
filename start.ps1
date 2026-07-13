@@ -39,21 +39,18 @@ function Get-NgrokUrl {
 # -----------------------------
 
 function Assert-N8nReady {
-    Write-Host ""
-    Write-Host "Checking n8n /healthz ..." -ForegroundColor Yellow
 
     try {
-        $resp = Invoke-WebRequest -Uri "http://localhost:5678/healthz" -UseBasicParsing -TimeoutSec 3
+        $resp = Invoke-WebRequest `
+            -Uri "http://localhost:5678/healthz" `
+            -UseBasicParsing `
+            -TimeoutSec 3
 
-        if ($resp.StatusCode -eq 200) {
-            Write-Host "n8n HEALTHY (200 OK)" -ForegroundColor Green
-            return $true
-        }
+        return ($resp.StatusCode -eq 200)
     }
-    catch {}
-
-    Write-Host "n8n not ready yet" -ForegroundColor Red
-    return $false
+    catch {
+        return $false
+    }
 }
 
 # -----------------------------
@@ -133,10 +130,33 @@ Write-Host "[5/5] Starting n8n + Postgres..." -ForegroundColor Yellow
 
 cmd /c "docker compose up -d >> .\logs\n8n.log 2>&1"
 
-Start-Sleep 300
+$maxRetries = 100
+$delaySec = 15
 
-# IMPORTANT REAL CHECK
-$ready = Assert-N8nReady
+$spinner = @('|','/','-','\')
+
+$ready = $false
+
+for ($i = 0; $i -lt $maxRetries; $i++) {
+
+    $frame = $spinner[$i % $spinner.Count]
+
+    Write-Host -NoNewline "`r[$frame] Checking n8n /healthz... attempt $($i + 1)/$maxRetries"
+
+    $ready = Assert-N8nReady
+
+    if ($ready) {
+        Write-Host "`r[OK] n8n is READY." -ForegroundColor Green
+        break
+    }
+
+    Start-Sleep -Seconds $delaySec
+}
+
+if (-not $ready) {
+    Write-Host "`r[✗] n8n failed to start in time.                              " -ForegroundColor Red
+    exit 1
+}
 
 $url = Get-NgrokUrl
 if (-not $url) { $url = "http://localhost:5678" }
