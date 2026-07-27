@@ -72,6 +72,17 @@ services:
       postgres:
         condition: service_healthy
 
+  telegram_bridge:
+    build: ./telegram_bridge
+    container_name: telegram_bridge
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./telegram_bridge/.env
+    volumes:
+      - ./telegram_bridge/sessions:/app/sessions
+
 volumes:
   postgres_data:
   n8n_data:

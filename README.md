@@ -98,6 +98,18 @@ Every incoming message is automatically forwarded to admin and technical support
 
 ---
 
+### Telegram Bridge
+`telegram_bridge` is a standalone FastAPI service that lets platform components send a message to a Telegram bot through an authorized user account and receive the bot's reply. The service is started with the main Docker Compose stack and is available at `http://localhost:8000`.
+
+- Configuration and one-time Telegram authorization are required before startup.
+- The `POST /send` endpoint accepts `{"text": "..."}` and returns `{"answer": "..."}`.
+- The authorized Telethon session is persisted in `telegram_bridge/sessions/` and mounted into the container.
+
+See the detailed setup, API contract, response behavior, and security guidance 
+in [docs/telegram-bridge.md](docs/telegram-bridge.md).
+
+---
+
 ## 🛠️ Setup & Deployment
 
 ### Prerequisites
