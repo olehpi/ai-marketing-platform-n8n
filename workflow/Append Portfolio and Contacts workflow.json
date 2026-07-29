@@ -1,0 +1,135 @@
+{
+  "name": "Append Portfolio and Contacts workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*) AS count\nFROM n8n_chat_histories\nWHERE session_id = '{{ $json.senderId }}';",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -304,
+        -48
+      ],
+      "id": "57efd70e-420b-4358-9bb0-0aa36a73be45",
+      "name": "Execute Row Count",
+      "credentials": {
+        "postgres": {
+          "id": "ZdBU97NJixhPiEbb",
+          "name": "Postgres account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n\"output\": \"Hello123345!\",\n\"senderId\": \"27404017755896866\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -512,
+        -48
+      ],
+      "id": "d8d71b7d-7ed7-470d-a93c-0a723f11bd66",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -64
+      ],
+      "id": "e491340a-4dad-4a0f-9138-b8498e33bf56",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=={{ { \noutput:\n$('When Executed by Another Workflow').item.json.output+\n\n(\n    Number($json.count) < 3 \n    \n    ? \n    \n    \"\\n\\nSee my Portfolio📸 instagram.com/reklamy_dla_biznesu__ai_video\" + \n        \"\\n\\nContact me:\\n\" +\n        \"🤖 t.me/AIVONA_bot\\n\" +\n        \"🌐 https://sites.google.com/view/aivona/prices\\n\"  +\n        \"📱 wa.me/48573414293\\n\" +\n        \"💬 t.me/pihnasta\\n\" +\n        \"📧 valentyna.pihnasta@gmail.com\\n\" +\n        \"📘 facebook.com/profile.php?id=61587071289082\\n\" +\n        \"🎵 tiktok.com/@valentynapihnasta8\"\n    \n    : \n    \n    \"\"\n)\n} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -48,
+        -64
+      ],
+      "id": "8b006b58-1ac0-4626-b87e-8551a66e46cd",
+      "name": "Prepare Portfolio and Contacts Output",
+      "alwaysOutputData": false,
+      "executeOnce": false
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "output": "Hello123345!",
+          "senderId": "27404017755896866"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Execute Row Count": {
+      "main": [
+        [
+          {
+            "node": "Prepare Portfolio and Contacts Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Execute Row Count",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Portfolio and Contacts Output": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "14c456ff-b7fa-4dde-83ad-319d7c517345",
+  "meta": {
+    "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
+  },
+  "id": "dARsyYqwjXUkiHYu",
+  "tags": [
+    {
+      "updatedAt": "2026-07-20T17:35:15.857Z",
+      "createdAt": "2026-07-20T17:35:15.857Z",
+      "id": "KjeCdlGvXz7Xzzcf",
+      "name": "PVS"
+    }
+  ]
+}

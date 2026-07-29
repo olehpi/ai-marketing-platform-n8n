@@ -1,0 +1,446 @@
+{
+  "name": "Sent to Telegram",
+  "nodes": [
+    {
+      "parameters": {
+        "chatId": "={{ $('Switch').item.json.chatId }}",
+        "text": "={{ $json['output for client'] ? $json['output for client'] : \"Sorry, I couldn't find an answer for your request.\" }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        -288
+      ],
+      "id": "f9c884bd-5fd8-4a76-a9d8-f7e601ed1f43",
+      "name": "Send a text message",
+      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
+      "credentials": {
+        "telegramApi": {
+          "id": "8q3AXOJieTvIg4cz",
+          "name": "Telegram AIVONA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "=699860511",
+        "text": "={{ $json['output for client'] ? $json['output for admin'] : \"Sorry, I couldn't find an answer for your request.\" }}\n\n\n",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        16,
+        -48
+      ],
+      "id": "f1e5fdda-9680-488f-9d1f-4d728f7a8a87",
+      "name": "Send a text message to admin",
+      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
+      "credentials": {
+        "telegramApi": {
+          "id": "8q3AXOJieTvIg4cz",
+          "name": "Telegram AIVONA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "=410770979",
+        "text": "={{ $json['output for client'] ? $json['output for tech support'] : \"Sorry, I couldn't find an answer for your request.\" }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        32,
+        160
+      ],
+      "id": "7139592d-8476-4ec8-80ee-39bba7eb2b18",
+      "name": "Send a text message to technical support",
+      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
+      "credentials": {
+        "telegramApi": {
+          "id": "8q3AXOJieTvIg4cz",
+          "name": "Telegram AIVONA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"output\": \"Hello123345!\",\n  \"inputMessage\": \"Hi\",\n  \"sourceType\": \"Telegram\",\n  \"user\": \"Oleh Pihnastyi\",\n  \"chatId\": \"699860511\",\n  \"userName\": \"Oleh_Pihnastyi\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1232,
+        -32
+      ],
+      "id": "557f1059-3290-42d0-9309-d0f0b39c6d2f",
+      "name": "send to Telegram"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.sourceType }}",
+                    "rightValue": "Telegram",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "08d2335e-e6c8-4e9a-9285-69047b50a359"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Telegram"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0a1fad5e-fdd5-4e80-8f66-d540c66901e8",
+                    "leftValue": "={{ $json.sourceType }}",
+                    "rightValue": "Facebook",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Facebook"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "97d34aee-b5f7-4a04-ba20-938376217b12",
+                    "leftValue": "={{ $json.sourceType }}",
+                    "rightValue": "GoogleSites",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "GoogleSites"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "8410dd47-0ca1-4035-9050-6cec4e62cc98",
+                    "leftValue": "None",
+                    "rightValue": "None",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Another"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -864,
+        -64
+      ],
+      "id": "11296b4b-1d49-40b4-ad5d-38fe6b760948",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88bde6e9-a5d1-4eb2-ada9-e96e76ffeee6",
+              "name": "output for client",
+              "value": "={{ $json['output for client'] }}",
+              "type": "string"
+            },
+            {
+              "id": "fd1c9ffb-5dd0-4e87-945e-7c303cf97349",
+              "name": "output for admin",
+              "value": "={{ $json['output for admin'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9e0e63cf-5e58-4f81-bc98-6a2320b2cf24",
+              "name": "output for tech support",
+              "value": "={{ $json['output for tech support'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -304,
+        -48
+      ],
+      "id": "826fedcb-4d75-4dbc-be04-622d8a08391f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\n\nconst sourceType = input.sourceType;\n\nconst outputForAdmin =\n  \"🆔 chat_id: \" + input.chatId +\n  \"  from \" + sourceType +\n  \"\\n👤 \" + input.user + \": \" + input.inputMessage +\n  \"\\n🤖 AI-assistant: \" + input.output +\n  \"\\n\\nReply to https://t.me/\" + input.userName;\n\nreturn [\n  {\n    json: {\n      \"output for client\": input.output,\n      \"output for admin\": outputForAdmin,\n      \"output for tech support\": outputForAdmin\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -608,
+        -288
+      ],
+      "id": "2c3b73e0-760a-498e-90ce-42a9da859f35",
+      "name": "Format Telegram Messages"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\n\nconst sourceType = input.sourceType;\n\nconst outputForAdmin =\n  \"🆔 chat_id: \" + input.chatId +\n  \"  from \" + sourceType +\n  \"\\n👤 \" + input.user + \": \" + input.inputMessage +\n  \"\\n🤖 AI-assistant: \" + input.output +\n  \"\\n\\nReply to \" + input.userName;\n\nreturn [\n  {\n    json: {\n      \"output for client\": input.output,\n      \"output for admin\": outputForAdmin,\n      \"output for tech support\": outputForAdmin\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -608,
+        -48
+      ],
+      "id": "95c15899-9d0a-4b31-90ec-118052e14be1",
+      "name": "Format Facebook Messages"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\n\nconst sourceType = input.sourceType;\n\nconst outputForAdmin =\n  \"🆔 chat_id: \" + input.chatId +\n  \"  from \" + sourceType +\n  \"\\n👤 \" + input.user + \": \" + input.inputMessage +\n  \"\\n🤖 AI-assistant: \" + input.output +\n  \"\\n\\nReply to \" + input.userName;\n\nreturn [\n  {\n    json: {\n      \"output for client\": input.output,\n      \"output for admin\": outputForAdmin,\n      \"output for tech support\": outputForAdmin\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -608,
+        192
+      ],
+      "id": "20d22025-dd90-4509-baa2-6f80e1c269b7",
+      "name": "Format GoogleSites"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5c6b12e6-4bc2-451e-8d7d-50a4b2f1f67f",
+              "name": "output",
+              "value": "={{\n$json.output\n.replace(/<function[\\s\\S]*?<\\/function>/g, \"\")\n.trim()\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1040,
+        -32
+      ],
+      "id": "39a120a8-1796-46fb-b8fc-be2ff5dabfc0",
+      "name": "Edit Fields1"
+    }
+  ],
+  "pinData": {
+    "send to Telegram": [
+      {
+        "json": {
+          "output": "Привет! 👋 Как я могу помочь вам сегодня? Хотите обсудить условия какого-нибудь объявления? 😊",
+          "inputMessage": "Привет",
+          "sourceType": "Telegram",
+          "user": "Lizka ",
+          "chatId": "757314302",
+          "userName": "lizok4i_k"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "send to Telegram": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Format Telegram Messages",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Facebook Messages",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format GoogleSites",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a text message to admin",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message to technical support",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Telegram Messages": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Facebook Messages": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format GoogleSites": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "126669d0-a6d0-4b55-848d-208665437a54",
+  "meta": {
+    "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
+  },
+  "id": "MJDpcff1lHk0vow7",
+  "tags": [
+    {
+      "updatedAt": "2026-07-20T17:35:15.857Z",
+      "createdAt": "2026-07-20T17:35:15.857Z",
+      "id": "KjeCdlGvXz7Xzzcf",
+      "name": "PVS"
+    }
+  ]
+}

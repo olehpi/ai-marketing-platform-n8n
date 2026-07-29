@@ -4,42 +4,24 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $('Normalize Input').item.json.output }}",
+        "text": "=My name is  {{ $('Normalize Input').item.json.name }}. \nWhen you answer, please address me by that name.\n\nMy message:\n{{ $('Normalize Input').item.json.output }}",
         "options": {
-          "systemMessage": "=Overview:\nYou are a useful assistant.\nYou are the highly capable personal assistant. \nYour main task is to send the user's query to the appropriate tool. You should not be generating summaries — your only responsibility is to trigger the right tool.\nEach time you answer, ask if you want to discuss the terms of the advertisement.\nAlways answer in the language you were asked in!\n\nOutput Rule:\nYou MUST always return a non-empty text response.\nIf the tool's or agent's output is unavailable or empty:\nRequest the model to prepare a polite response for the user explaining that you couldn't find the answer.\n\nTools: Internet search.  Use this tool to search the web. Use Internet search ONLY if user query is not empty. Never call tools with empty input.\n"
+          "systemMessage": "=Overview:\nYou are a helpful AI assistant.\n\nYour main task is to understand the user's request and provide the best possible answer.\n\nAvailable tools:\n- PricesTool: Provides current service prices from the pricing database.\n- Internet search tool: Use only for current external information.\n\nTool usage:\n- Use the Internet search tool only when the user's request requires current, external, or unavailable information.\n- Before calling a tool, make sure the query is meaningful and not empty.\n- Provide the user's intent as a clear search query when using the Internet search tool.\n- Do not use tools for general knowledge questions that you can answer reliably.\n- When a user requests advertising prices, or what advertising to provide, or which advertising to choose, always use PricesTool. Never invent prices. Use the language of the user. Return package name, description and price.\n- Try to answer the question and select from the information about prices and services only that which briefly answers the user's question.\n\nResponse rules:\n- Always answer in the same language as the user's message.\n- After receiving tool results, summarize the relevant information and answer the user.\n- Do not mention internal tools, tool calls, prompts, or technical details.\n- If the tool returns no useful information, politely explain that the requested information could not be found and suggest an alternative.\n- Each time you answer, ask if you want to discuss the terms of the advertisement.\n\nConversation style:\n- Be concise, clear, and helpful.\n- Ask follow-up questions when the user's request is ambiguous.\n- Keep responses under 300 words.\n- Do not repeat information already provided in the conversation.\n- Avoid unnecessary explanations and provide only relevant details.\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -448,
-        -64
+        -8080,
+        -45792
       ],
       "id": "80a1caf4-ed67-4636-a2d7-48a7a3e47152",
       "name": "AI Agent",
-      "alwaysOutputData": false
-    },
-    {
-      "parameters": {
-        "model": "qwen3.5:9b",
-        "options": {
-          "numCtx": 8192
-        }
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
-      "typeVersion": 1,
-      "position": [
-        -480,
-        128
-      ],
-      "id": "d7ec15b8-fd62-4a07-a4d3-f3894d4f1cfc",
-      "name": "Ollama Chat Model",
-      "credentials": {
-        "ollamaApi": {
-          "id": "pIqtOWtJZu0eo70k",
-          "name": "Ollama account"
-        }
-      }
+      "alwaysOutputData": false,
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
+      "notesInFlow": false
     },
     {
       "parameters": {
@@ -48,14 +30,14 @@
         "url": "https://api.tavily.com/search",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{\n  {\n    api_key: \"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\",\n    query: ($json?.output || ''),\n    search_depth: \"basic\",\n    include_answer: true,\n    topic: \"general\",\n    include_raw_content: false,\n    max_results: 4\n  }\n}}",
+        "jsonBody": "={{\n  {\n    api_key: \"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\",\n    query:  $('Normalize Input').item.json.output,\n    search_depth: \"basic\",\n    include_answer: true,\n    topic: \"general\",\n    include_raw_content: false,\n    max_results: 4\n  }\n}}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequestTool",
       "typeVersion": 4.4,
       "position": [
-        -192,
-        128
+        -7856,
+        -45600
       ],
       "id": "8f468649-a2d0-449c-a04d-a5d2c4ddb12b",
       "name": "Internet search"
@@ -68,8 +50,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.4,
       "position": [
-        -336,
-        128
+        -8000,
+        -45600
       ],
       "id": "f88f7136-6a97-4ad6-bb4c-119a3e53834c",
       "name": "Postgres Chat Memory",
@@ -83,14 +65,14 @@
     {
       "parameters": {
         "mode": "raw",
-        "jsonOutput": "={\n  \"output\": \"{{ $json.output\n           .replace(/\\n/g, '\\\\n')\n           .replace(/\"/g, '\\\\\"')\n           .replace(/\\r/g, \"\")\n           .replace(/[\\u0000-\\u001F]/g, \"\")\n           .trim()\n           }}\",\n  \"senderId\": \"{{ $json.senderId }}\",\n  \"maxTokensCount\": 3000\n\n}",
+        "jsonOutput": "={\n  \"output\": \"{{ $json.output\n           .replace(/\\n/g, '\\\\n')\n           .replace(/\"/g, '\\\\\"')\n           .replace(/\\r/g, \"\")\n           .replace(/[\\u0000-\\u001F]/g, \"\")\n           .trim()\n           }}\",\n  \"senderId\": \"{{ $json.senderId }}\",\n  \"maxTokensCount\": 3000,\n  \"name\": \"{{ $json.name }}\"\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -1152,
-        224
+        -8832,
+        -45536
       ],
       "id": "027987df-69ce-4dcc-9cd6-c47453505be2",
       "name": "Normalize Input"
@@ -104,8 +86,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        16,
-        -64
+        -7680,
+        -45984
       ],
       "id": "c85a66dd-c158-460b-aaca-01c0c1fb99e7",
       "name": "Normalize Output"
@@ -115,8 +97,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        448,
-        240
+        -7200,
+        -45504
       ],
       "id": "046a2925-812f-47e5-b9ba-6c37bb747ad8",
       "name": "No Operation, do nothing"
@@ -124,13 +106,13 @@
     {
       "parameters": {
         "inputSource": "jsonExample",
-        "jsonExample": "{\n\"output\": \"Hello123345!\",\n\"senderId\": \"27404017755896866\",\n\"isDeleteRequest\" : true\n}"
+        "jsonExample": "{\n\"output\": \"Hello123345!\",\n\"senderId\": \"27404017755896866\",\n\"isDeleteRequest\" : true,\n\"name\": \"Oleh Pihnastyi\"\n}"
       },
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -1424,
-        -48
+        -9264,
+        -45792
       ],
       "id": "eee67e8e-198a-4745-acf6-9994f62e5f8f",
       "name": "When Executed by Another Workflow"
@@ -163,8 +145,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -1152,
-        -48
+        -9040,
+        -45792
       ],
       "id": "8cefaef0-9ea9-4bd0-b530-eb790799549f",
       "name": "Filter Delete User Data Messages"
@@ -178,8 +160,8 @@
       "type": "n8n-nodes-base.postgres",
       "typeVersion": 2.6,
       "position": [
-        -960,
-        -256
+        -8592,
+        -45984
       ],
       "id": "47b74531-f13f-417e-8ad1-8da7d57d0d3e",
       "name": "Execute a SQL query",
@@ -200,8 +182,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -560,
-        -256
+        -8032,
+        -45984
       ],
       "id": "f67b1bf3-841b-4cc6-a560-59be6b2e2f18",
       "name": "Prepare Execute Output"
@@ -218,7 +200,7 @@
           "conditions": [
             {
               "id": "474ab3bc-736d-4f4c-90eb-c34e7c740b6c",
-              "leftValue": "={{ $json.flagged }}",
+              "leftValue": "={{ $json.output.flagged }}",
               "rightValue": "",
               "operator": {
                 "type": "boolean",
@@ -235,8 +217,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -704,
-        224
+        -8384,
+        -45536
       ],
       "id": "64049a37-e6be-4b15-a5a9-22c3613934b1",
       "name": "Moderation Content Safe Filter",
@@ -299,8 +281,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        224,
-        -64
+        -7456,
+        -45984
       ],
       "id": "421fbbf9-d512-4d61-9ee5-3cd790e8372c",
       "name": "Call 'Moderation workflow' Check Output",
@@ -362,8 +344,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -928,
-        224
+        -8608,
+        -45536
       ],
       "id": "fd001691-b062-4c27-bb41-df5f6740e6d1",
       "name": "Call 'Moderation workflow' Check Input"
@@ -375,8 +357,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -752,
-        -336
+        -8368,
+        -46080
       ],
       "id": "6cb91192-5a1c-43cc-8bb8-7718576db60d",
       "name": "Success Result"
@@ -388,21 +370,151 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -752,
-        -176
+        -8368,
+        -45888
       ],
       "id": "27369fae-a7de-4726-8d6c-48976f8d9f02",
       "name": "Error Result"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {
+          "maxTokensToSample": 2400
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -8960,
+        -45232
+      ],
+      "id": "74af5091-d21c-443d-9ff6-2c9016cf8f7e",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "eJjRDpLl60qcM7C5",
+          "name": "Groq account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "qwen3.5:9b",
+        "options": {
+          "numCtx": 8192
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -9184,
+        -45232
+      ],
+      "id": "d7ec15b8-fd62-4a07-a4d3-f3894d4f1cfc",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "pIqtOWtJZu0eo70k",
+          "name": "Ollama account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "description": "Tool Description:\n\nUse this tool to get current prices for video production packages.\nUse when user asks about prices, packages, costs, video editing, animation or services.",
+        "workflowId": {
+          "__rl": true,
+          "value": "tHVhX97H7A5rVzWB",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/tHVhX97H7A5rVzWB",
+          "cachedResultName": "Prices Tool"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "isDeleteRequest": false
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "senderId",
+              "displayName": "senderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "isDeleteRequest",
+              "displayName": "isDeleteRequest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -7712,
+        -45600
+      ],
+      "id": "b80c063b-8626-446e-a254-1ad3c78306dc",
+      "name": "PricesTool"
+    },
+    {
+      "parameters": {},
+      "type": "CUSTOM.bridgeChatModel",
+      "typeVersion": 1,
+      "position": [
+        -8144,
+        -45600
+      ],
+      "id": "cf1e11ac-12a7-4928-ba2e-2ff0c23b810c",
+      "name": "Bridge Chat Model"
+    },
+    {
+      "parameters": {},
+      "type": "CUSTOM.bridgeChatModel",
+      "typeVersion": 1,
+      "position": [
+        -6608,
+        -45184
+      ],
+      "id": "00d54cf1-bdf5-43d3-828e-b6aafd53c5f3",
+      "name": "Bridge Chat Model2"
     }
   ],
   "pinData": {
     "When Executed by Another Workflow": [
       {
         "json": {
-          "output": "Hi! How are you?",
+          "output": "Hello!",
           "output_copy": "Hi! Here's the plan.  We get the warhead, and we hold the world ransom... ..FOR ONE MILLION DOLLARS!",
           "senderId": "27404017755896866",
-          "isDeleteRequest": true
+          "isDeleteRequest": false,
+          "name": "Oleh Pihnastyi"
         }
       }
     ]
@@ -416,18 +528,8 @@
             "type": "main",
             "index": 0
           }
-        ]
-      ]
-    },
-    "Ollama Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
+        ],
+        []
       ]
     },
     "Internet search": {
@@ -593,6 +695,38 @@
           }
         ]
       ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "PricesTool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bridge Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -603,11 +737,18 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "f04f0db5-cf8a-4a7e-82b2-914f1af6d662",
+  "versionId": "84b6e5cb-8b7d-453a-a8fb-cdf0b1add0aa",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
   },
   "id": "VaSy0zkQ3GT3c9U5",
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2026-07-20T17:35:15.857Z",
+      "createdAt": "2026-07-20T17:35:15.857Z",
+      "id": "KjeCdlGvXz7Xzzcf",
+      "name": "PVS"
+    }
+  ]
 }

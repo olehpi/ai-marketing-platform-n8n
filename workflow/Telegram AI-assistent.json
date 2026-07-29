@@ -1,5 +1,5 @@
 {
-  "name": "Telegram-comments-auto-reply",
+  "name": "Telegram AI-assistent",
   "nodes": [
     {
       "parameters": {
@@ -11,8 +11,8 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.3,
       "position": [
-        -1088,
-        -128
+        -1424,
+        -192
       ],
       "id": "545d5607-d8cf-454a-864a-27024e79131b",
       "name": "Telegram Trigger",
@@ -110,8 +110,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -944,
-        -144
+        -1200,
+        -208
       ],
       "id": "a5c04170-140d-4de4-b0ff-f08b3836a248",
       "name": "Switch"
@@ -133,61 +133,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -704,
-        -160
+        -752,
+        -384
       ],
       "id": "c41a103a-79d7-4036-ae03-3496bf1f74d9",
       "name": "Edit Fields"
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $('Switch').item.json.message.from.id }}",
-        "text": "={{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "HTML"
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        48,
-        32
-      ],
-      "id": "8f216825-5598-43b8-9b6d-3819e3490ad3",
-      "name": "Send a text message",
-      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
-      "credentials": {
-        "telegramApi": {
-          "id": "8q3AXOJieTvIg4cz",
-          "name": "Telegram AIVONA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "=699860511",
-        "text": "=🆔 chat_id: {{ $('Telegram Trigger').item.json.message.chat.id }}\n👤 {{ $('Telegram Trigger').item.json.message.from.first_name }} {{ $('Telegram Trigger').item.json.message.from.last_name }}: {{ $('Telegram Trigger').item.json.message.text }}\n🤖 AI-assistent: {{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n\nReply to https://t.me/{{ $('Telegram Trigger').item.json.message.from.username }}\n\n\n\n",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "=HTML"
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        48,
-        176
-      ],
-      "id": "23bd1aec-1bf8-4e78-af17-f7bd263fef41",
-      "name": "Send a text message to admin",
-      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
-      "credentials": {
-        "telegramApi": {
-          "id": "8q3AXOJieTvIg4cz",
-          "name": "Telegram AIVONA"
-        }
-      }
     },
     {
       "parameters": {
@@ -200,8 +150,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -784,
-        0
+        -976,
+        -192
       ],
       "id": "0ca7c139-3231-43b1-9cfc-a6596d8e472b",
       "name": "Get an audio file",
@@ -222,8 +172,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -784,
-        176
+        -976,
+        0
       ],
       "id": "91959e7b-14b7-4888-ae5c-6c421025ff0c",
       "name": "Get a video file",
@@ -255,8 +205,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -624,
-        0
+        -752,
+        -192
       ],
       "id": "afc1e9fa-6121-4c46-bc56-f69033c49c0c",
       "name": "HTTP Request: Whisper ASR for an audio-message option"
@@ -281,36 +231,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -624,
-        176
+        -752,
+        0
       ],
       "id": "eafe2969-07e5-4a26-9716-d7abb935b178",
       "name": "HTTP Request for an video-message option"
-    },
-    {
-      "parameters": {
-        "chatId": "=410770979",
-        "text": "=🆔 chat_id: {{ $('Telegram Trigger').item.json.message.chat.id }}\n👤 {{ $('Telegram Trigger').item.json.message.from.first_name }} {{ $('Telegram Trigger').item.json.message.from.last_name }}: {{ $('Telegram Trigger').item.json.message.text }}\n🤖 AI-assistent: {{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n\nReply to https://t.me/{{ $('Telegram Trigger').item.json.message.from.username }}\n",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "=HTML"
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        48,
-        352
-      ],
-      "id": "985fd2f0-adf3-42f1-b15b-5e34618064d7",
-      "name": "Send a text message to technical support",
-      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
-      "credentials": {
-        "telegramApi": {
-          "id": "8q3AXOJieTvIg4cz",
-          "name": "Telegram AIVONA"
-        }
-      }
     },
     {
       "parameters": {
@@ -322,27 +247,10 @@
       "typeVersion": 3.4,
       "position": [
         -304,
-        -160
+        -192
       ],
       "id": "65824a4f-fdf9-4662-a95a-a658af039d26",
       "name": "Prepare Agent Input"
-    },
-    {
-      "parameters": {
-        "mode": "raw",
-        "jsonOutput": "=={{ { output: $json.output } }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        48,
-        -160
-      ],
-      "id": "42f00981-ac8e-4878-9a50-d632d73ff88a",
-      "name": "Prepare Agent Output",
-      "alwaysOutputData": false,
-      "executeOnce": false
     },
     {
       "parameters": {
@@ -378,8 +286,8 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -128,
-        -160
+        -80,
+        -192
       ],
       "id": "9339f54f-cfec-44f8-9ad9-c22c5c436769",
       "name": "Call 'Agent workflow'"
@@ -391,14 +299,203 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -464,
-        -160
+        -528,
+        -192
       ],
       "id": "187a98a5-148e-43b3-a17f-388b137733e8",
       "name": "Classify Delete User Data Event"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "MJDpcff1lHk0vow7"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "output": "={{$json.output }}",
+            "sourceType": "=Telegram",
+            "user": "={{ $('Telegram Trigger').item.json.message.from.first_name }} {{ $('Telegram Trigger').item.json.message.from.last_name }}",
+            "chatId": "={{ String($('Telegram Trigger').item.json.message.chat.id) }}",
+            "userName": "={{ $('Telegram Trigger').item.json.message.chat.username }}",
+            "inputMessage": "={{ $('Telegram Trigger').item.json.message.text }}"
+          },
+          "matchingColumns": [
+            "output"
+          ],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "inputMessage",
+              "displayName": "inputMessage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "sourceType",
+              "displayName": "sourceType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "user",
+              "displayName": "user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatId",
+              "displayName": "chatId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "userName",
+              "displayName": "userName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        592,
+        -192
+      ],
+      "id": "02d5d96b-7ba6-4fe2-baef-e15c52164b72",
+      "name": "Call 'Sent to Telegram'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "dARsyYqwjXUkiHYu",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/dARsyYqwjXUkiHYu",
+          "cachedResultName": "Append Portfolio and Contacts workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "output": "={{ $json.output }}",
+            "senderId": "={{ $json.senderId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "senderId",
+              "displayName": "senderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        368,
+        -192
+      ],
+      "id": "b50c65db-c38c-4101-b7b0-1abecd0ca41a",
+      "name": "Call 'Append Portfolio and Contacts workflow'"
+    },
+    {
+      "parameters": {
+        "jsCode": "let output = $input.first().json.output\nlet senderId = String($('Prepare Agent Input').first().json.senderId)\n\nreturn [\n  {\n    json: { output, senderId },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        -192
+      ],
+      "id": "85aa646d-b2a6-4a3b-b8e4-ba982108f412",
+      "name": "Assemble Agent Output"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "Telegram Trigger": [
+      {
+        "json": {
+          "update_id": 361439571,
+          "message": {
+            "message_id": 118,
+            "from": {
+              "id": 699860511,
+              "is_bot": false,
+              "first_name": "Oleh",
+              "last_name": "Pihnastyi",
+              "username": "Oleh_Pihnastyi",
+              "language_code": "ru"
+            },
+            "chat": {
+              "id": 699860511,
+              "first_name": "Oleh",
+              "last_name": "Pihnastyi",
+              "username": "Oleh_Pihnastyi",
+              "type": "private"
+            },
+            "date": 1783891550,
+            "text": "delete my data"
+          }
+        }
+      }
+    ]
+  },
   "connections": {
     "Telegram Trigger": {
       "main": [
@@ -506,7 +603,7 @@
       "main": [
         [
           {
-            "node": "Prepare Agent Output",
+            "node": "Assemble Agent Output",
             "type": "main",
             "index": 0
           }
@@ -524,21 +621,22 @@
         ]
       ]
     },
-    "Prepare Agent Output": {
+    "Assemble Agent Output": {
       "main": [
         [
           {
-            "node": "Send a text message",
+            "node": "Call 'Append Portfolio and Contacts workflow'",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Call 'Append Portfolio and Contacts workflow'": {
+      "main": [
+        [
           {
-            "node": "Send a text message to admin",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Send a text message to technical support",
+            "node": "Call 'Sent to Telegram'",
             "type": "main",
             "index": 0
           }
@@ -549,13 +647,23 @@
   "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
   },
-  "versionId": "3b0ea128-e466-4526-8815-84f4c7f4802c",
+  "versionId": "9fda98e0-1d2e-4a30-8ee9-61e445046aed",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
   },
   "id": "8M7APYPSjxyM1wN1",
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2026-07-20T17:35:15.857Z",
+      "createdAt": "2026-07-20T17:35:15.857Z",
+      "id": "KjeCdlGvXz7Xzzcf",
+      "name": "PVS"
+    }
+  ]
 }

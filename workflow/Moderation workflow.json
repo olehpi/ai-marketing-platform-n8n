@@ -9,7 +9,7 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -1184,
+        -1712,
         0
       ],
       "id": "50c37198-0837-4a12-9f25-26fdf9289648",
@@ -41,18 +41,19 @@
               "role": "assistant"
             },
             {
-              "content": "={{$json.output}}"
+              "content": "={{ $('Is Valid Output Length').item.json.output }}"
             }
           ]
         },
         "options": {
-          "temperature": 0
+          "temperature": 0,
+          "num_predict": 2048
         }
       },
       "type": "@n8n/n8n-nodes-langchain.ollama",
       "typeVersion": 1,
       "position": [
-        -688,
+        -704,
         -176
       ],
       "id": "1cba97d1-0859-4b5f-8430-1fe5109aa8dc",
@@ -72,7 +73,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1024,
+        -1552,
         0
       ],
       "id": "da4bb3a2-4a28-41a8-bb0a-a45a6252160e",
@@ -107,7 +108,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -848,
+        -1376,
         0
       ],
       "id": "2eaec29d-a31b-472c-a799-5f63218ecb7a",
@@ -116,20 +117,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const cleaned = $input.first().json.content\n  .replace(/```json/g, '')\n  .replace(/```/g, '')\n  .trim();\n\nconst parsed = JSON.parse(cleaned);\nparsed.output = $('Moderation Output Length').first().json.output;\nreturn [\n  {\n    json: parsed\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -432,
-        -176
-      ],
-      "id": "6255ec6e-8a7c-46cf-99d5-1e1956637721",
-      "name": "Build Moderation Result"
-    },
-    {
-      "parameters": {
-        "jsCode": "let output = $input.first().json.output;\nconst categories = $input.first().json.categories;\nconst category_scores = $input.first().json.category_scores;\nconst isValidOutputLength = $('Moderation Output Length').first().json.isValidOutputLength\nconst flagged = $input.first().json.flagged\n\nif (flagged) {\n  output = 'Sorry, I cannot process this request.';\n}\n\nreturn [\n  {\n    json: {\n      output: output,\n      categories: categories,\n      category_scores: category_scores,\n      flagged: flagged,\n      isValidOutputLength: isValidOutputLength\n    }\n  }\n];"
+        "jsCode": "let output = $input.first().json.output;\nconst categories = $input.first().json.categories;\nconst category_scores = $input.first().json.category_scores;\nconst isValidOutputLength = $('Moderation Output Length').first().json.isValidOutputLength\nlet flagged = $input.first().json.flagged\n\nif (flagged) {\n  output = 'Sorry, I cannot process this request.';\n}\n\nreturn [\n  {\n    json: {\n      output: output,\n      categories: categories,\n      category_scores: category_scores,\n      flagged: flagged,\n      isValidOutputLength: isValidOutputLength\n    }\n  }\n];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -154,6 +142,74 @@
       ],
       "id": "d517c66c-82a6-4d13-bc32-0ddbc5f97826",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3.6-27b",
+        "options": {
+          "maxTokensToSample": 4096
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        -112
+      ],
+      "id": "a084580f-3ccf-4ad7-91b3-3e855d8093c9",
+      "name": "Groq Chat Model",
+      "notesInFlow": false,
+      "credentials": {
+        "groqApi": {
+          "id": "Dh3IgqC3HNicQPaO",
+          "name": "n8n_Moderation"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "You are a content moderation system.\n\nAnalyze the user input and return ONLY valid JSON.\n\nRules for analyzing:\n- Scores must be between 0 and 1\n- flagged = true if ANY score >= 0.6 (strict threshold)\n- Be conservative: if unsure, assign higher score\n- Output ONLY JSON, no markdown, no explanations\n- Base scoring on semantic meaning, not keywords\n\nReturn format:\n\n{\n  \"flagged\": boolean,\n  \"categories\": {\n    \"harassment\": boolean,\n    \"harassment/threatening\": boolean,\n    \"sexual\": boolean,\n    \"hate\": boolean,\n    \"hate/threatening\": boolean,\n    \"illicit\": boolean,\n    \"illicit/violent\": boolean,\n    \"self-harm\": boolean,\n    \"self-harm/intent\": boolean,\n    \"self-harm/instructions\": boolean,\n    \"sexual/minors\": boolean,\n    \"violence\": boolean,\n    \"violence/graphic\": boolean\n  },\n  \"category_scores\": {\n    \"harassment\": number,\n    \"harassment/threatening\": number,\n    \"sexual\": number,\n    \"hate\": number,\n    \"hate/threatening\": number,\n    \"illicit\": number,\n    \"illicit/violent\": number,\n    \"self-harm\": number,\n    \"self-harm/intent\": number,\n    \"self-harm/instructions\": number,\n    \"sexual/minors\": number,\n    \"violence\": number,\n    \"violence/graphic\": number\n  }\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1088,
+        -288
+      ],
+      "id": "27927899-eb89-43a5-a1ec-6d557e2a4108",
+      "name": "AI Agent",
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.output;\n\nconst tempString = output\n  .replace(/<think>[\\s\\S]*?<\\/think>/, '')\n  .trim();\nconst finalAnswer = JSON.parse(tempString);\nreturn [\n  {\n    json: {\n      output: finalAnswer\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        -352
+      ],
+      "id": "c78b18af-b27c-4e76-995f-5b5b0a4bf823",
+      "name": "Build Moderation Result (API)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const cleaned = $input.first().json.content\n  .replace(/```json/g, '')\n  .replace(/```/g, '')\n  .trim();\n\nconst parsed = JSON.parse(cleaned);\nparsed.output = $('Moderation Output Length').first().json.output;\nreturn [\n  {\n    json: parsed\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        -176
+      ],
+      "id": "6255ec6e-8a7c-46cf-99d5-1e1956637721",
+      "name": "Build Moderation Result (local)"
     }
   ],
   "pinData": {
@@ -172,7 +228,7 @@
       "main": [
         [
           {
-            "node": "Build Moderation Result",
+            "node": "Build Moderation Result (local)",
             "type": "main",
             "index": 0
           }
@@ -205,7 +261,7 @@
       "main": [
         [
           {
-            "node": "Moderation Model",
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
@@ -213,17 +269,6 @@
         [
           {
             "node": "No Operation, do nothing",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Build Moderation Result": {
-      "main": [
-        [
-          {
-            "node": "Post-process Moderation Output",
             "type": "main",
             "index": 0
           }
@@ -240,6 +285,57 @@
           }
         ]
       ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Build Moderation Result (API)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Moderation Model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Moderation Result (API)": {
+      "main": [
+        [
+          {
+            "node": "Post-process Moderation Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Moderation Result (local)": {
+      "main": [
+        [
+          {
+            "node": "Post-process Moderation Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -250,10 +346,18 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "e903df04-97a2-452a-b1e6-73254631eb29",
+  "versionId": "9f314cfb-61a2-42d3-8f33-be1794d689a2",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
   },
   "id": "2ysDdHOqv4vvbZW4",
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2026-07-20T17:35:15.857Z",
+      "createdAt": "2026-07-20T17:35:15.857Z",
+      "id": "KjeCdlGvXz7Xzzcf",
+      "name": "PVS"
+    }
+  ]
 }

@@ -1,0 +1,120 @@
+{
+  "name": "Prices Tool",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n\"output\": \"Hello123345!\",\n\"senderId\": \"27404017755896866\",\n\"isDeleteRequest\" : true\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -496,
+        -16
+      ],
+      "id": "50a093f3-2c93-48e9-968c-04caa2a4fb57",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1yE_ByHImp8xCEHNSZWXN4eTNv-9LotEQvi77Z-fh7IY",
+          "mode": "list",
+          "cachedResultName": "Prices",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1yE_ByHImp8xCEHNSZWXN4eTNv-9LotEQvi77Z-fh7IY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "video_PL",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -144,
+        -16
+      ],
+      "id": "89053dee-96a9-428b-ad40-d1e283bec9c9",
+      "name": "GetPricesFromTable",
+      "credentials": {
+        "googleApi": {
+          "id": "oHJzvsa00LDFnPVK",
+          "name": "getpricestable"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        64,
+        -16
+      ],
+      "id": "b0d36739-3586-4c3a-9152-0330a7c22725",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "output": "Hello!",
+          "output_copy": "Hi! Here's the plan.  We get the warhead, and we hold the world ransom... ..FOR ONE MILLION DOLLARS!",
+          "senderId": "27404017755896866",
+          "isDeleteRequest": true
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "GetPricesFromTable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetPricesFromTable": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "b582d454-b465-49aa-832a-765258bb1956",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
+  },
+  "id": "tHVhX97H7A5rVzWB",
+  "tags": [
+    {
+      "updatedAt": "2026-07-20T17:35:15.857Z",
+      "createdAt": "2026-07-20T17:35:15.857Z",
+      "id": "KjeCdlGvXz7Xzzcf",
+      "name": "PVS"
+    }
+  ]
+}

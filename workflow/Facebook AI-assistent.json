@@ -1,5 +1,5 @@
 {
-  "name": "Facebook-comments-auto-reply",
+  "name": "Facebook AI-assistent",
   "nodes": [
     {
       "parameters": {
@@ -76,81 +76,6 @@
     },
     {
       "parameters": {
-        "chatId": "=699860511",
-        "text": "={{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "Markdown"
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -3040,
-        48
-      ],
-      "id": "e317805b-c8dc-486e-b50b-50ed77d6f7e4",
-      "name": "Send a text message",
-      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
-      "credentials": {
-        "telegramApi": {
-          "id": "8q3AXOJieTvIg4cz",
-          "name": "Telegram AIVONA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "=699860511",
-        "text": "={{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n\n",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "Markdown"
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -3040,
-        208
-      ],
-      "id": "5e138b70-71d9-4453-b3fa-0b9185a15ecf",
-      "name": "Send a text message to admin",
-      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
-      "credentials": {
-        "telegramApi": {
-          "id": "8q3AXOJieTvIg4cz",
-          "name": "Telegram AIVONA"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "=410770979",
-        "text": "={{ $json.output ? $json.output : \"Sorry, I couldn't find an answer for your request.\" }}\n",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "Markdown"
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        -3040,
-        384
-      ],
-      "id": "f5215c56-821b-48ed-b600-915527b1d152",
-      "name": "Send a text message to technical support",
-      "webhookId": "0d97b98b-6f63-4e33-8145-9674b639043f",
-      "credentials": {
-        "telegramApi": {
-          "id": "8q3AXOJieTvIg4cz",
-          "name": "Telegram AIVONA"
-        }
-      }
-    },
-    {
-      "parameters": {
         "jsCode": "const change = $json.body.entry[0].changes[0].value;\n\nreturn [{\n  json: {\n    senderId: change.from.id,\n    output: change.message,\n          \n    type: \"comment\",\n    commentId: change.comment_id,\n    postId: change.post_id,\n  }\n}];"
       },
       "id": "0e2eee63-d5de-4f66-9f6d-387030564552",
@@ -203,13 +128,13 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        -2784,
-        64
+        -2384,
+        80
       ]
     },
     {
       "parameters": {
-        "httpMethod": "POST",
+        "httpMethod": "=POST",
         "path": "vpost",
         "options": {}
       },
@@ -350,23 +275,6 @@
     },
     {
       "parameters": {
-        "mode": "raw",
-        "jsonOutput": "=={{ { \noutput: $json.output \n+\n    \"\\n\\nContact me:\\n\" +\n    \"🤖 t.me/AIVONA_bot\\n\" +\n    \"🌐 valentynapihnasta.wordpress.com\\n\" +\n    \"📱 wa.me/48573414293\\n\" +\n    \"💬 t.me/pihnasta\\n\" +\n    \"📧 valentyna.pihnasta@gmail.com\\n\" +\n    \"📘 facebook.com/profile.php?id=61587071289082\\n\" +\n    \"📸 instagram.com/reklamy_dla_biznesu__ai_video\\n\" +\n    \"🎵 tiktok.com/@valentynapihnasta8\"\n} }}",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [
-        -3232,
-        176
-      ],
-      "id": "f8858a5e-192f-4c51-92e4-31aaa4831fbe",
-      "name": "Prepare Agent Output",
-      "alwaysOutputData": false,
-      "executeOnce": false
-    },
-    {
-      "parameters": {
         "workflowId": {
           "__rl": true,
           "value": "VaSy0zkQ3GT3c9U5",
@@ -399,7 +307,7 @@
       "type": "n8n-nodes-base.executeWorkflow",
       "typeVersion": 1.3,
       "position": [
-        -3408,
+        -3376,
         176
       ],
       "id": "abff5d3c-17d2-4fb0-9d78-d51ca3d405e4",
@@ -432,7 +340,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -3120,
+        -2736,
         -128
       ],
       "id": "93167798-ddee-405d-8143-3653000c7f1a",
@@ -455,7 +363,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -2928,
+        -2544,
         -144
       ],
       "id": "c6effd2d-0734-4f63-82b0-6e9f401fe82b",
@@ -485,7 +393,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
       "position": [
-        -2784,
+        -2400,
         -144
       ]
     },
@@ -501,9 +409,219 @@
       ],
       "id": "1c5c477f-36f7-4a64-b3b9-a4a8b90afe1e",
       "name": "Classify Delete User Data Event"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "MJDpcff1lHk0vow7"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "output": "={{$json.output }}",
+            "sourceType": "Facebook",
+            "inputMessage": "={{ $('Prepare Agent Input').item.json.output }}",
+            "user": "={{ String($('Assemble Agent Output').item.json.senderId) }}",
+            "userName": "={{ String($('Assemble Agent Output').item.json.senderId) }}",
+            "chatId": "={{ $('Facebook Webhook Events').item.json.body.entry[0].id }}"
+          },
+          "matchingColumns": [
+            "output"
+          ],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "inputMessage",
+              "displayName": "inputMessage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "sourceType",
+              "displayName": "sourceType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "user",
+              "displayName": "user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatId",
+              "displayName": "chatId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "userName",
+              "displayName": "userName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -2640,
+        176
+      ],
+      "id": "ec3a6918-2871-4fbb-b835-4e771586bbfb",
+      "name": "Call 'Sent to Telegram'"
+    },
+    {
+      "parameters": {
+        "jsCode": "let output = $input.first().json.output\nlet senderId = $('Prepare Agent Input').first().json.senderId\n\nreturn [\n  {\n    json: { output, senderId },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3152,
+        176
+      ],
+      "id": "56a4aba7-0908-4843-974e-b52006bb029f",
+      "name": "Assemble Agent Output"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "dARsyYqwjXUkiHYu",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/dARsyYqwjXUkiHYu",
+          "cachedResultName": "Append Portfolio and Contacts workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "output": "={{ $json.output }}",
+            "senderId": "={{ $json.senderId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "senderId",
+              "displayName": "senderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -2928,
+        176
+      ],
+      "id": "3be59606-118b-4b10-9d19-08939e5c099d",
+      "name": "Call 'Append Portfolio and Contacts workflow'"
     }
   ],
-  "pinData": {},
+  "pinData": {
+    "Facebook Webhook Events": [
+      {
+        "json": {
+          "headers": {
+            "host": "reseller-idiocy-wharf.ngrok-free.dev",
+            "user-agent": "facebookexternalua",
+            "content-length": "321",
+            "accept": "*/*",
+            "accept-encoding": "deflate, gzip",
+            "content-type": "application/json",
+            "facebook-api-version": "v25.0",
+            "x-forwarded-for": "2a03:2880:31ff:22::",
+            "x-forwarded-host": "reseller-idiocy-wharf.ngrok-free.dev",
+            "x-forwarded-proto": "https",
+            "x-hub-signature": "sha1=104c8ca2c20b1c8a6f6558f99f18851f7c66e15b",
+            "x-hub-signature-256": "sha256=c4345cff3866e2a9f44f816064b3f614cd2e31f9831053fda6c74ecb3dbf116d"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "object": "page",
+            "entry": [
+              {
+                "time": 1783888500037,
+                "id": "894775487062575",
+                "messaging": [
+                  {
+                    "sender": {
+                      "id": "27404017755896866"
+                    },
+                    "recipient": {
+                      "id": "894775487062575"
+                    },
+                    "timestamp": 1783888498657,
+                    "message": {
+                      "mid": "m_GbSNjU3bVH91ti3zlkcJFKKSji4rARWRQoxyiAuyF4pPq8QsHZViFViCiq_lg28cKXua9MCewJbXdcqEVT4XJw",
+                      "text": "delete my data"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "webhookUrl": "https://reseller-idiocy-wharf.ngrok-free.dev/webhook/vpost",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
   "connections": {
     "Verify Token Check": {
       "main": [
@@ -635,37 +753,11 @@
         ]
       ]
     },
-    "Prepare Agent Output": {
-      "main": [
-        [
-          {
-            "node": "Send a text message",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Send a text message to admin",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Send a text message to technical support",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Route Reply Type",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Call 'Agent workflow'": {
       "main": [
         [
           {
-            "node": "Prepare Agent Output",
+            "node": "Assemble Agent Output",
             "type": "main",
             "index": 0
           }
@@ -711,6 +803,33 @@
           }
         ]
       ]
+    },
+    "Assemble Agent Output": {
+      "main": [
+        [
+          {
+            "node": "Call 'Append Portfolio and Contacts workflow'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Append Portfolio and Contacts workflow'": {
+      "main": [
+        [
+          {
+            "node": "Call 'Sent to Telegram'",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Route Reply Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
@@ -721,11 +840,18 @@
     "callerPolicy": "workflowsFromSameOwner",
     "availableInMCP": false
   },
-  "versionId": "15331125-9806-4db1-9a80-4e1da341e754",
+  "versionId": "ce7f4cc8-961d-47d5-9b43-9ab83b7165b4",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
   },
   "id": "V0yegBvA5bF1ZkJD",
-  "tags": []
+  "tags": [
+    {
+      "updatedAt": "2026-07-20T17:35:15.857Z",
+      "createdAt": "2026-07-20T17:35:15.857Z",
+      "id": "KjeCdlGvXz7Xzzcf",
+      "name": "PVS"
+    }
+  ]
 }

@@ -1,0 +1,665 @@
+{
+  "name": "Google Sites AI-assistent",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f4c6bf7c-2742-4df6-baf9-cbc8259578b3",
+              "name": "text",
+              "value": "={{ $json.Message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "selected",
+        "includeFields": "=Email, Name",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -928,
+        176
+      ],
+      "id": "0893ccd0-ad80-4e5a-8210-a361475ade6d",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=={{\n    {\n      senderId: $json.senderId,\n      output: $json.output,\n      isDeleteRequest: $json.isDeleteRequest ,\n      Name: $('Edit Fields').item.json.Name\n    }\n}}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -576,
+        176
+      ],
+      "id": "7fb97b63-1538-4f6b-a830-6e873d4beac5",
+      "name": "Prepare Agent Input"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "VaSy0zkQ3GT3c9U5",
+          "mode": "id",
+          "cachedResultUrl": "/workflow/VaSy0zkQ3GT3c9U5"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "isDeleteRequest": "={{ false }}",
+            "senderId": "={{ $json.senderId }}",
+            "output": "={{ $json.output }}",
+            "name": "={{ $json.Name }}"
+          },
+          "matchingColumns": [
+            ""
+          ],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "senderId",
+              "displayName": "senderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "isDeleteRequest",
+              "displayName": "isDeleteRequest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -384,
+        176
+      ],
+      "id": "d25df751-4d85-42b0-b555-82d84eec9e86",
+      "name": "Call 'Agent workflow'"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\n\nconst output =\n  item.text ||\n  item.data ||\n  item.output ||\n  item.message?.text ||\n  \"\";\n\nconst isDeleteRequest =\n  output.toLowerCase().includes(\"delete my data\");\n\nconst senderId =$input.first().json.Email\n\nreturn [{\n  json: {\n    senderId,\n    output,\n    isDeleteRequest\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -768,
+        176
+      ],
+      "id": "cc8429cc-5ec3-403f-acd5-e97ab7c5b755",
+      "name": "Classify Delete User Data Event"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "MJDpcff1lHk0vow7"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "output": "={{$json.output }}",
+            "sourceType": "=GoogleSites",
+            "user": "={{ $('Edit Fields').item.json.Name }}",
+            "chatId": "=",
+            "userName": "={{ $('Edit Fields').item.json.Email }}",
+            "inputMessage": "={{ $('Edit Fields').item.json.text }}"
+          },
+          "matchingColumns": [
+            "output"
+          ],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "inputMessage",
+              "displayName": "inputMessage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "sourceType",
+              "displayName": "sourceType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "user",
+              "displayName": "user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatId",
+              "displayName": "chatId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "userName",
+              "displayName": "userName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        256,
+        176
+      ],
+      "id": "f3b4506b-a358-436f-aa17-5143d1dcd049",
+      "name": "Call 'Sent to Telegram'"
+    },
+    {
+      "parameters": {
+        "jsCode": "let output = $input.first().json.output\nlet senderId = String($('Prepare Agent Input').first().json.senderId)\nlet name = $('Prepare Agent Input').first().json.Name\n\nreturn [\n  {\n    json: { output, senderId, name },\n  },\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -176,
+        176
+      ],
+      "id": "528bff40-644e-47df-b842-9a5a993dd91d",
+      "name": "Assemble Agent Output"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "15AdFa7PKETn_0ansLftRfo7gDIJq0ogFzmh9sG6EaPc",
+          "mode": "list",
+          "cachedResultName": "MessagesFromGoogleSite",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15AdFa7PKETn_0ansLftRfo7gDIJq0ogFzmh9sG6EaPc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "aivonaGoogleSite",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15AdFa7PKETn_0ansLftRfo7gDIJq0ogFzmh9sG6EaPc/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1328,
+        192
+      ],
+      "id": "736b2542-789d-432e-8a03-5970e470abec",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "oHJzvsa00LDFnPVK",
+          "name": "getpricestable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1504,
+        192
+      ],
+      "id": "39646fd5-2af3-49e0-b59f-bdc854321f7a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7604fbba-1083-48fc-855b-7d4143158433",
+              "leftValue": "={{ Object.keys($json).length > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1168,
+        192
+      ],
+      "id": "13974642-5899-404e-8e0e-dbb8e4fb63e4",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "dARsyYqwjXUkiHYu",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/dARsyYqwjXUkiHYu",
+          "cachedResultName": "Append Portfolio and Contacts workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "output": "={{ $json.output }}",
+            "senderId": "={{ $json.senderId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "senderId",
+              "displayName": "senderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        32,
+        176
+      ],
+      "id": "6c7a4b23-d7d0-4e25-a3e8-a8d71ce4d9b4",
+      "name": "Call 'Append Portfolio and Contacts workflow'"
+    },
+    {
+      "parameters": {
+        "fromEmail": "valentyna.pihnasta@gmail.com",
+        "toEmail": "={{ $('Edit Fields').item.json.Email }}",
+        "subject": "AI Advertising for Restaurants and Businesses",
+        "emailFormat": "text",
+        "text": "=Hi {{ $('Edit Fields').item.json.Name }} !\n\n{{ $('Call \\'Agent workflow\\'').item.json.output }}\n\nBest regards,\n            Valentyna Pihnasta\n\n  \n    \"See my Portfolio📸 instagram.com/reklamy_dla_biznesu__ai_video\"\n        \"Contact me:\" \n        \"🤖 t.me/AIVONA_bot\" \n        \"🌐 https://sites.google.com/view/aivona/prices\" \n        \"📱 wa.me/48573414293\" \n        \"💬 t.me/pihnasta\" \n        \"📧 valentyna.pihnasta@gmail.com\" \n        \"📘 facebook.com/profile.php?id=61587071289082\" \n        \"🎵 tiktok.com/@valentynapihnasta8\"\n\n\n--- {{ $('Prepare Agent Input').item.json.senderId }}\n\n--- {{ $('Edit Fields').item.json.text }}\n\n--- {{ $('Edit Fields').item.json.Name }}\n--- {{ $('Get row(s) in sheet').item.json.Date }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        464,
+        176
+      ],
+      "id": "b2634625-bb70-4247-9672-e8a3329b07fd",
+      "name": "Send an Email",
+      "webhookId": "37848aae-92ee-4076-bab8-e105a7be2271",
+      "credentials": {
+        "smtp": {
+          "id": "2QEoXX3isrHVMy66",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "15AdFa7PKETn_0ansLftRfo7gDIJq0ogFzmh9sG6EaPc",
+          "mode": "list",
+          "cachedResultName": "MessagesFromGoogleSite",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15AdFa7PKETn_0ansLftRfo7gDIJq0ogFzmh9sG6EaPc/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "aivonaGoogleSite",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/15AdFa7PKETn_0ansLftRfo7gDIJq0ogFzmh9sG6EaPc/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "={{ $json.result.text }}",
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        480,
+        400
+      ],
+      "id": "2012ee1c-f9a4-43f2-a9ca-638e2a0b16dd",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "oHJzvsa00LDFnPVK",
+          "name": "getpricestable"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Classify Delete User Data Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Agent Input": {
+      "main": [
+        [
+          {
+            "node": "Call 'Agent workflow'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Agent workflow'": {
+      "main": [
+        [
+          {
+            "node": "Assemble Agent Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify Delete User Data Event": {
+      "main": [
+        [
+          {
+            "node": "Prepare Agent Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assemble Agent Output": {
+      "main": [
+        [
+          {
+            "node": "Call 'Append Portfolio and Contacts workflow'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Append Portfolio and Contacts workflow'": {
+      "main": [
+        [
+          {
+            "node": "Call 'Sent to Telegram'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Sent to Telegram'": {
+      "main": [
+        [
+          {
+            "node": "Send an Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "fe7692db-5fa7-4a5d-ad6f-ed4247745b62",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
+  },
+  "id": "YZwUyqNabSPnCLpY",
+  "tags": [
+    {
+      "updatedAt": "2026-07-20T17:35:15.857Z",
+      "createdAt": "2026-07-20T17:35:15.857Z",
+      "id": "KjeCdlGvXz7Xzzcf",
+      "name": "PVS"
+    }
+  ]
+}
