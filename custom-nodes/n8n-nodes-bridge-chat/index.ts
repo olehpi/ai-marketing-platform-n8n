@@ -1,0 +1,1 @@
+export { BridgeChatModel } from './nodes/BridgeChatModel/BridgeChatModel.node';

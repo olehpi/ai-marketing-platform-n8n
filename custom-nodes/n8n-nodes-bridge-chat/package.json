@@ -1,0 +1,25 @@
+{
+  "name": "n8n-nodes-bridge-chat",
+  "version": "0.1.0",
+  "description": "Bridge Chat Model for n8n AI Agent",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc && copyfiles -u 2 \"nodes/**/*.svg\" dist"
+  },
+  "dependencies": {
+    "@langchain/core": "^0.3.0",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "copyfiles": "^2.4.1",
+    "n8n-workflow": "^2.21.7",
+    "typescript": "^5.7.0"
+  },
+  "n8n": {
+    "nodes": [
+      "dist/BridgeChatModel.node.js"
+    ]
+  }
+}

@@ -65,8 +65,11 @@ services:
       - WEBHOOK_URL=${WEBHOOK_URL}
       - N8N_WORKFLOW_HISTORY_PRUNE_TIME=120 # in hours
 
+      - N8N_CUSTOM_EXTENSIONS=/home/node/custom
+
     volumes:
       - n8n_data:/home/node/.n8n
+      - ./custom-nodes:/home/node/custom
 
     depends_on:
       postgres:
