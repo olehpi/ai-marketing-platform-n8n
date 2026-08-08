@@ -6,6 +6,12 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from telethon import TelegramClient
 from dotenv import load_dotenv
+from telethon import events
+from telethon.tl.types import User, Channel, Chat
+
+import httpx
+
+from telethon.tl.functions.channels import GetFullChannelRequest
 
 load_dotenv()
 
@@ -41,11 +47,39 @@ class ChatRequest(BaseModel):
     bot_name: str | None = None
 
 
+class ChannelInfoRequest(BaseModel):
+    channel_url: str
+
+
+class SendMessageRequest(BaseModel):
+    target: str
+    text: str
+
+
+class GroupRequest(BaseModel):
+    group: str
+    limit: int = 100
+
+
+class GroupMessagesRequest(BaseModel):
+    groups: list[GroupRequest]
+
+
 async def init_telegram():
     await client.connect()
     if not await client.is_user_authorized():
         raise Exception("Telegram session not authorized")
     print("Telegram connected")
+
+    # print("Telegram connected")
+    # print("GROUP TITLE:", getattr(group, "title", None))
+    # print("GROUP ID:", group.id)
+    # print("GROUP USERNAME:", getattr(group, "username", None))
+    #
+    # client.add_event_handler(
+    #     handle_group_message,
+    #     events.NewMessage(chats=group.id)
+    # )
 
 
 @app.on_event("startup")
@@ -86,7 +120,7 @@ async def chat(req: ChatRequest):
     if not target_bot:
         raise Exception("No Telegram bot configured")
     user_message = req.messages[-1].content
-    print("AI REQUEST:", user_message)
+    print("AI REQUEST:", user_message[:100])
     print("TARGET BOT:", target_bot)
     print("TOOLS:", [t.name for t in req.tools])
 
@@ -139,3 +173,250 @@ async def chat(req: ChatRequest):
 
     # The usual answer
     return {"content": answer}
+
+async def handle_group_message(event):
+    if not event.message.text:
+        return
+
+    chat = await event.get_chat()
+    sender = await event.get_sender()
+
+    sender_data = {
+        "id": event.sender_id,
+        "username": getattr(sender, "username", None),
+        "first_name": getattr(sender, "first_name", None),
+        "last_name": getattr(sender, "last_name", None),
+        "phone": getattr(sender, "phone", None),
+    }
+
+    message_data = {
+        "chat": {
+            "id": event.chat_id,
+            "title": getattr(chat, "title", None),
+            "username": getattr(chat, "username", None),
+        },
+
+        "sender": sender_data,
+
+        "message": {
+            "id": event.message.id,
+            "date": event.message.date.isoformat()
+            if event.message.date else None,
+            "text": event.message.text,
+        }
+    }
+
+    print("========== GROUP MESSAGE ==========")
+    print("CHAT ID:", message_data["chat"]["id"])
+    print("CHAT TITLE:", message_data["chat"]["title"])
+
+    print("SENDER ID:", sender_data["id"])
+    print("SENDER USERNAME:", sender_data["username"])
+    print("SENDER FIRST NAME:", sender_data["first_name"])
+    print("SENDER LAST NAME:", sender_data["last_name"])
+
+    print("MESSAGE ID:", message_data["message"]["id"])
+    print("TEXT:", message_data["message"]["text"])
+    print("===================================")
+
+@app.post("/group/messages")
+async def get_group_messages(req: GroupMessagesRequest):
+    messages = []
+
+    for group_request in req.groups:
+        group_name = group_request.group
+        limit = group_request.limit
+
+        try:
+            group = await client.get_entity(group_name)
+
+            print("===================================")
+            print("READING GROUP:", group_name)
+            print("GROUP TITLE:", getattr(group, "title", None))
+            print("GROUP ID:", group.id)
+            print("GROUP USERNAME:", getattr(group, "username", None))
+            print("LIMIT:", limit)
+            print("===================================")
+
+            group_messages = []
+
+            async for message in client.iter_messages(
+                    group,
+                    limit=limit
+            ):
+                if not message.text:
+                    continue
+
+                chat = await message.get_chat()
+                sender = await message.get_sender()
+
+                sender_data = {
+                    "id": message.sender_id,
+                    "username": getattr(sender, "username", None),
+                    "first_name": getattr(sender, "first_name", None),
+                    "last_name": getattr(sender, "last_name", None),
+                    "phone": getattr(sender, "phone", None),
+                }
+
+                message_data = {
+                    "chat": {
+                        "id": message.chat_id,
+                        "title": getattr(chat, "title", None),
+                        "username": getattr(chat, "username", None),
+                    },
+
+                    "sender": sender_data,
+
+                    "message": {
+                        "id": message.id,
+                        "date": (
+                            message.date.isoformat()
+                            if message.date else None
+                        ),
+                        "text": message.text,
+                    }
+                }
+
+                group_messages.append(message_data)
+
+            messages.extend(reversed(group_messages))
+
+        except Exception as e:
+            print(
+                f"ERROR READING GROUP {group_name}: {e}"
+            )
+
+    return {
+        "count": len(messages),
+        "messages": messages
+    }
+
+class ValidateTelegramContactsRequest(BaseModel):
+    contacts: list[dict]  # [{"value": "...", "type": "..."}, ...]
+
+@app.post("/telegram/validate")
+async def validate_telegram_contacts(req: ValidateTelegramContactsRequest):
+    """check the type of contact"""
+    print(f"validate_telegram_contacts: {len(req.contacts)} контактов")
+
+    results = []
+    all_correct = True
+
+    try:
+        for contact in req.contacts:
+            try:
+                # get real contact
+                resolve_result = await resolve_telegram_contact(contact["value"])
+
+                if not resolve_result.get("success", True):
+                    actual_type = "unknown"
+                else:
+                    actual_type = resolve_result.get("type", "unknown")
+
+                # Проверяем совпадение
+                declared_type = contact["type"].lower()
+                is_correct = declared_type == actual_type.lower()
+                all_correct = all_correct and is_correct
+
+                results.append({
+                    "value": contact["value"],
+                    "declared_type": contact["type"],
+                    "actual_type": actual_type,
+                    "is_correct": is_correct,
+                    "error": resolve_result.get("error") if not resolve_result.get("success") else None,
+                    "details": {
+                        "id": resolve_result.get("id"),
+                        "username": resolve_result.get("username"),
+                        "title": resolve_result.get("title"),
+                    }
+                })
+
+            except Exception as e:
+                print(f"ERROR VALIDATING {contact['value']}: {e}")
+                all_correct = False
+                results.append({
+                    "value": contact["value"],
+                    "declared_type": contact["type"],
+                    "actual_type": "unknown",
+                    "is_correct": False,
+                    "error": str(e),
+                    "details": None
+                })
+
+        return {
+            "success": True,
+            "all_correct": all_correct,
+            "total": len(req.contacts),
+            "correct_count": sum(1 for r in results if r["is_correct"]),
+            "results": results
+        }
+
+    except Exception as e:
+        print(f"ERROR IN VALIDATION: {e}")
+        return {
+            "success": False,
+            "error": str(e),
+            "results": []
+        }
+
+async def resolve_telegram_contact(contact: str):
+    """
+    Определяет реальный тип Telegram контакта используя Telethon
+
+    Args:
+        contact: Контакт (@username, https://t.me/username, и т.д.)
+
+    Returns:
+        Dict с типом контакта и дополнительной информацией
+    """
+    try:
+        entity = await client.get_entity(contact)
+
+        if isinstance(entity, User):
+            return {
+                "type": "bot" if entity.bot else "user",
+                "id": entity.id,
+                "username": entity.username,
+                "first_name": entity.first_name,
+                "last_name": entity.last_name,
+            }
+
+        if isinstance(entity, Channel):
+            if entity.megagroup:
+                entity_type = "group"
+            elif entity.broadcast:
+                entity_type = "channel"
+            else:
+                entity_type = "channel"
+
+            return {
+                "type": entity_type,
+                "id": entity.id,
+                "username": entity.username,
+                "title": entity.title,
+                "megagroup": entity.megagroup,
+                "broadcast": entity.broadcast,
+            }
+
+        if isinstance(entity, Chat):
+            return {
+                "type": "chat",
+                "id": entity.id,
+                "username": getattr(entity, "username", None),
+                "title": entity.title,
+            }
+
+        return {
+            "type": "unknown",
+            "id": getattr(entity, "id", None),
+            "username": getattr(entity, "username", None),
+            "title": getattr(entity, "title", None),
+        }
+
+    except Exception as e:
+        print(f"Error resolving contact {contact}: {e}")
+        return {
+            "type": "unknown",
+            "error": str(e)
+        }
+

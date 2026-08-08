@@ -26,6 +26,12 @@ http://telegram_bridge:8000/chat
 ```
 
 ## Docker build
+```cmd
+cd ...custom-nodes\n8n-nodes-bridge-chat
+```
+```cmd
+npm run build
+```
 
 The custom node is bundled into the n8n image by `custom-nodes/n8n-nodes-bridge-chat/Dockerfile`.
 

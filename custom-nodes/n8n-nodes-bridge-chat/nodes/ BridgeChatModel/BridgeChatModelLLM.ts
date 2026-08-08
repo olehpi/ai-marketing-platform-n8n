@@ -1,6 +1,6 @@
 import {BaseChatModel, BaseChatModelParams,} from "@langchain/core/language_models/chat_models";
 import {BaseMessage, AIMessage, HumanMessage, SystemMessage, ToolMessage} from "@langchain/core/messages";
-import {ChatResult, ChatGeneration} from "@langchain/core/outputs";
+import {ChatResult} from "@langchain/core/outputs";
 import axios from "axios";
 
 export interface BridgeTool {
@@ -12,15 +12,18 @@ export interface BridgeTool {
 export class BridgeChatModelLLM extends BaseChatModel {
     private tools: BridgeTool[] = [];
 
-    constructor(private bridgeUrl: string, params?: BaseChatModelParams) {
+    constructor(private bridgeUrl: string,
+                private botName: string,
+                params?: BaseChatModelParams) {
         super(params ?? {});
-        console.log("BridgeChatModel created:", bridgeUrl);
+        console.log("BridgeChatModel created: ", bridgeUrl);
+        console.log("botName: ", botName);
     }
 
     /* LangChain tool binding */
     bindTools(tools: any[]) {
         console.log("Bridge tools:", tools.map(t => t.name));
-        const model = new BridgeChatModelLLM(this.bridgeUrl);
+        const model = new BridgeChatModelLLM(this.bridgeUrl, this.botName);
         model.tools = tools.map(
             tool => ({
                 name: tool.name,
@@ -53,7 +56,8 @@ export class BridgeChatModelLLM extends BaseChatModel {
     async _generate(messages: BaseMessage[], options: any): Promise<ChatResult> {
         const body = {
             messages: this.serializeMessages(messages),
-            tools: this.tools
+            tools: this.tools,
+            bot_name: this.botName,
         };
         console.log("BRIDGE REQUEST", JSON.stringify(body, null, 2));
         const result = await axios.post(

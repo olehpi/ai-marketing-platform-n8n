@@ -113,7 +113,11 @@ curl -X POST http://localhost:8000/chat ^
 -H "Content-Type: application/json" ^
 -d "{\"messages\":[{\"role\":\"user\",\"content\":\"Hello!!!!!\"}],\"bot_name\":\"your_chat_bot\",\"tools\":[{\"name\":\"PricesTool\",\"description\":\"Provides current service prices from the pricing database\"},{\"name\":\"Internet_search\",\"description\":\"Search current external information\"}]}"
 ```
-chatgpt3
+
+UTF-8 coding
+```cmd
+chcp 65001
+```
 
 Successful response:
 

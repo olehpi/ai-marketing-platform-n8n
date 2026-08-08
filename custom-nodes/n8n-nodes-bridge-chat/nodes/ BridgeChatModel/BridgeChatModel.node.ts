@@ -19,12 +19,27 @@ export class BridgeChatModel implements INodeType {
                 type: "string",
                 default: "http://telegram_bridge:8000/chat",
                 required: true
+            },
+            {
+                displayName: "Bot Name",
+                name: "botName",
+                type: "string",
+                default: "gigachat_bot",
+                required: true,
+                description: "Telegram bot username without @"
             }
         ]
     };
 
     async supplyData(this: ISupplyDataFunctions) {
         const url = this.getNodeParameter("url", 0) as string;
-        return {response: new BridgeChatModelLLM(url)};
+        const botName = this.getNodeParameter("botName", 0) as string;
+
+        return {
+            response: new BridgeChatModelLLM(
+                url,
+                botName
+            )
+        };
     }
 }
