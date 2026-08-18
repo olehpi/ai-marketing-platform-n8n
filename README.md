@@ -59,6 +59,15 @@ Incoming messages can be forwarded to administrator and technical-support Telegr
 - The Telethon session is persisted in `telegram_bridge/sessions/` and mounted into the container.
 
 See [docs/telegram-bridge.md](docs/telegram-bridge.md) for setup, API details, response handling, and security guidance.
+### Telegram Channels and Groups Processing
+
+The `workflow/Processing Telegram Channels and Groups/` workflows automate Telegram lead collection and message handling:
+
+- `Collect Telegram Clients From Groups Agent` collects messages from selected groups and saves normalized chat and sender data to Google Sheets.
+- `Collect Telegram Contacts from Messages` extracts and validates contact data from Telegram messages.
+- `Telegram AI Sales & Ads Agent` prepares sales and ads follow-up messages using the shared Telegram client data.
+
+See [docs/telegram-groups-processing.md](docs/telegram-groups-processing.md) for the full workflow overview.
 
 ## Workflow Documentation
 
@@ -69,42 +78,4 @@ Documentation for newly added and modified workflows is available in `docs/`:
 - [Prices Tool](docs/prices-tool.md) — provides price-list rows from Google Sheets to calling workflows.
 - [Sent to Telegram Workflow](docs/sent-to-telegram.md) — routes user and internal notifications to Telegram.
 - [Telegram Bridge](docs/telegram-bridge.md) — describes the standalone Telegram user-account bridge service.
-
-## Setup and Deployment
-
-### Prerequisites
-
-- Docker and Docker Compose.
-- PostgreSQL 16.
-- n8n.
-
-### Environment Configuration
-
-Create a `.env` file based on `.env.example`:
-
-```env
-POSTGRES_USER=n8n
-POSTGRES_PASSWORD=your_strong_password
-POSTGRES_DB=n8n_chat_memory
-
-N8N_HOST=your-domain
-N8N_PROTOCOL=https
-WEBHOOK_URL=https://your-domain/
-```
-
-### Local Startup
-
-Use the interactive PowerShell scripts from the repository root:
-
-1. Open PowerShell in this folder.
-2. Run `./start.ps1`.
-3. Confirm the prompts for Docker, ngrok, Ollama, Whisper, and n8n startup.
-4. Wait for the n8n health check to return `200 OK`.
-5. Open the displayed n8n URL, or use `http://localhost:5678` if ngrok is unavailable.
-6. Run `./status.ps1` at any time to check Docker, Ollama, and ngrok.
-
-Useful commands:
-
-- `./status.ps1` shows Docker, Ollama, and ngrok status.
-- `./stop.ps1` stops Whisper, n8n, PostgreSQL, ngrok, and Ollama.
-- Logs are written to `logs/`.
+- [Processing Telegram Channels and Groups](docs/telegram-groups-processing.md) — describes the Telegram group/contact processing workflows.

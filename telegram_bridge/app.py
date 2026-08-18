@@ -6,12 +6,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from telethon import TelegramClient
 from dotenv import load_dotenv
-from telethon import events
 from telethon.tl.types import User, Channel, Chat
-
-import httpx
-
-from telethon.tl.functions.channels import GetFullChannelRequest
 
 load_dotenv()
 
@@ -420,3 +415,50 @@ async def resolve_telegram_contact(contact: str):
             "error": str(e)
         }
 
+from telethon.errors import FloodWaitError
+async def send_message_to_contact(contact: str, message: str, retry_count: int = 0):
+    max_retries = 3
+
+    try:
+        await asyncio.sleep(2 + retry_count)   # небольшая пауза перед отправкой
+
+        entity = await client.get_entity(contact)
+        result = await client.send_message(entity, message)
+
+        return {
+            "success": True,
+            "message_id": result.id,
+            "contact": contact
+        }
+
+    except FloodWaitError as e:
+        wait_seconds = e.seconds
+        print(f"FloodWaitError: Telegram просит подождать {wait_seconds} секунд "
+              f"(попытка {retry_count + 1}/{max_retries})")
+
+        if retry_count >= max_retries:
+            return {
+                "success": False,
+                "contact": contact,
+                "error": f"Too many requests - max retries exceeded (нужно было ждать {wait_seconds}с)"
+            }
+
+        await asyncio.sleep(wait_seconds + 3)  # ждём столько, сколько сказал Telegram + запас
+        return await send_message_to_contact(contact, message, retry_count + 1)
+
+    except Exception as e:
+        error_msg = str(e)
+        print(f"Ошибка при отправке в {contact}: {error_msg}")
+        print(f"Тип ошибки: {type(e)}")          # ← добавьте эту строку для диагностики
+
+        return {
+            "success": False,
+            "contact": contact,
+            "error": error_msg
+        }
+
+@app.post("/telegram/send")
+async def send_telegram_message(req: SendMessageRequest):
+    print(f"send_telegram_message: target={req.target}, text_len={len(req.text)}")
+    result = await send_message_to_contact(req.target, req.text)
+    return result

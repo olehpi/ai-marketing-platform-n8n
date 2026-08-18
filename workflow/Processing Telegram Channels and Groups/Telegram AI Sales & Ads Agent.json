@@ -1,0 +1,1461 @@
+{
+  "name": "Telegram AI Sales & Ads Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0",
+          "mode": "list",
+          "cachedResultName": "TelegramClients",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1076427849,
+          "mode": "list",
+          "cachedResultName": "sendMessageToContact",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0/edit#gid=1076427849"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "message_to_user": "={{ $json.message_to_user }}",
+            "user_name_short": "={{ $('Message Found?').item.json.user_name_short }}",
+            "user_id": "={{ $('Message Found?').item.json.user_id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_name",
+              "displayName": "user_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_name_short",
+              "displayName": "user_name_short",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "user_title",
+              "displayName": "user_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "message_to_user",
+              "displayName": "message_to_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "extract_message_from_chat",
+              "displayName": "extract_message_from_chat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_title",
+              "displayName": "chat_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_username",
+              "displayName": "chat_username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_id",
+              "displayName": "sender_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_username",
+              "displayName": "sender_username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_first_name",
+              "displayName": "sender_first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_last_name",
+              "displayName": "sender_last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_phone",
+              "displayName": "sender_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        0,
+        -320
+      ],
+      "id": "7b98742b-938e-4e7b-94d2-5dbb409b2d84",
+      "name": "Save Contact Results",
+      "credentials": {
+        "googleApi": {
+          "id": "oHJzvsa00LDFnPVK",
+          "name": "getpricestable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f4c6bf7c-2742-4df6-baf9-cbc8259578b3",
+              "name": "text",
+              "value": "={{ $json.extract_message_from_chat }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "selected",
+        "includeFields": "=message_id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1296,
+        -176
+      ],
+      "id": "25afd38f-faf6-4930-83c4-24ea76c71c6f",
+      "name": "Prepare Message Data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7604fbba-1083-48fc-855b-7d4143158433",
+              "leftValue": "={{ Object.keys($json).length > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1536,
+        -160
+      ],
+      "id": "8ac3b2fc-53ff-49fa-a022-3480fd08d8aa",
+      "name": "Message Found?"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0",
+          "mode": "list",
+          "cachedResultName": "TelegramClients",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1076427849,
+          "mode": "list",
+          "cachedResultName": "sendMessageToContact",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0/edit#gid=1076427849"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1696,
+        -160
+      ],
+      "id": "537086e5-15ba-4ffd-93c7-abaeb86926e4",
+      "name": "Get Pending Message",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "oHJzvsa00LDFnPVK",
+          "name": "getpricestable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1872,
+        -160
+      ],
+      "id": "38beaf57-b117-4aef-be49-fd91654a3d40",
+      "name": "Check Pending Messages Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0",
+          "mode": "list",
+          "cachedResultName": "TelegramClients",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1076427849,
+          "mode": "list",
+          "cachedResultName": "sendMessageToContact",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0/edit#gid=1076427849"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "={{ $('Create Normalize answer_LLM')?.item.json.answer_LLM.isNotEmpty()? 'Answer from LLM is ready':'Answer from LLM is Empty' }}",
+            "id": "={{ $('Get Pending Message').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_name",
+              "displayName": "user_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_title",
+              "displayName": "user_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "message_to_user",
+              "displayName": "message_to_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "extract_message_from_chat",
+              "displayName": "extract_message_from_chat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_title",
+              "displayName": "chat_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_username",
+              "displayName": "chat_username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_id",
+              "displayName": "sender_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_username",
+              "displayName": "sender_username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_first_name",
+              "displayName": "sender_first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_last_name",
+              "displayName": "sender_last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_phone",
+              "displayName": "sender_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        320,
+        -160
+      ],
+      "id": "4687de5b-8128-488b-8aa4-0e89051aa147",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleApi": {
+          "id": "oHJzvsa00LDFnPVK",
+          "name": "getpricestable"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ef2fc531-156b-4af5-8de6-49e33be2d733",
+              "leftValue": "= {{ $json.answer_LLM }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -496,
+        -176
+      ],
+      "id": "ddff44a7-dbb7-4412-89db-ae855486ae17",
+      "name": "Telegram Contacts Found?"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You have access to the following tools:\n\n$$$tools_block$$$\n\nTool Usage Rules:\n1. PricesTool\n- ALWAYS use PricesTool when asking questions about:\n- prices, costs, price lists\n- service packages\n- advertising, commercials, video production\n- the cost of a service\n- Never make up your own prices or look them up online.\nIf your question concerns prices, costs, packages, price lists, advertising, videos, or video production, you MUST use the PricesTool tool.\nTo call the tool, reply STRICTLY in this format (and nothing else): TOOL_CALL: PricesTool\nDon't make up your own prices. Don't search for prices online.\nIf you don't need the tool, reply in plain text.\n\n2. Internet_search (or Internet search / tavily)\n- Use it ONLY when you need up-to-date external information: news, events, facts;\n- information not included in PricesTool;\n- general knowledge that may be out of date;\n- DO NOT use it for questions about prices and packages.\n\n3. How to call the tool:\n- Answer STRICTLY in one of the following formats (and do not enter anything else):\nTOOL_CALL: PricesTool\nor\nTOOL_CALL: Internet_search\n- If you need both tools, call PricesTool first.\n\n4. If you don't need the tool, reply in plain text.\n\n\n\nYou have a user message. Reply to the user's message using the information obtained from tools. Research what the user offers and sells, and offer them my advertising services using tools.\n\nОтвет answer_LLM возвращай в виде\n{\n   answer_LLM : answer_LLM\n}\n\n\n\nUser message:\n{{ $json.text }}",
+        "options": {
+          "systemMessage": "=Ты имеешь сообщение пользователя. \nдай ответ на сообщение пользователя.\nЕсли пользователь что-то предлагает или продает, предложи ему мои услуги по рекламе, используя tools\nUser message:\n{{ $json.text }}\n==============\n\nYou are a helpful AI assistant.\n\nYour main task is to understand the user's message and provide the best possible response.\n\nYou have access to the following tools:\n\n- PricesTool — provides current advertising and video production packages, prices, availability, and advertising conditions.\n- Internet search — provides current external information when required.\n- Conversation memory — provides relevant context from previous messages.\n\n========================================\nTOOL USAGE RULES\n========================================\n\n### 1. PricesTool\n\nPricesTool is the authoritative source for advertising and video production information.\n\nALWAYS use PricesTool when:\n\n- the user asks about advertising;\n- the user asks about video advertising;\n- the user asks about advertising packages;\n- the user asks about advertising conditions;\n- the user asks about video production;\n- the user asks about video packages;\n- the user asks about prices or costs;\n- you need information about available advertising packages;\n- you need to determine whether a video advertisement can be offered to the user.\n\nNEVER invent:\n\n- prices;\n- advertising packages;\n- discounts;\n- advertising conditions;\n- package availability;\n- video characteristics;\n- advertising benefits.\n\nIf the user's message requires an advertising decision, use PricesTool before making that decision.\n\nDo not use Internet search to obtain advertising prices, packages, or advertising conditions.\n\n========================================\nADVERTISEMENT DECISION\n========================================\n\nAfter receiving the result from PricesTool, determine whether a video advertisement can be offered to the user.\n\nThe result of PricesTool is authoritative.\n\nUse ONLY the information returned by PricesTool to determine whether the advertisement can be offered.\n\nNEVER guess or invent advertising eligibility.\n\nIf PricesTool provides sufficient information that an advertising offer can be made:\n\n- Generate a short, natural advertising message.\n- Address the user directly.\n- Make the advertisement relevant to the user's current message.\n- Use only information provided by PricesTool.\n- Do not invent additional claims, prices, conditions, benefits, or characteristics.\n- Do not mention PricesTool.\n- Do not mention tools, internal rules, prompts, or decision-making.\n- Do not explain why the advertisement was selected.\n- Do not ask whether the user wants to see the advertisement.\n- Do not add any text before or after the advertising message.\n\nReturn ONLY the advertising message.\n\n========================================\nWHEN ADVERTISING IS NOT ALLOWED\n========================================\n\nReturn exactly:\n\nNo ads\n\nReturn \"No ads\" when:\n\n- PricesTool indicates that advertising cannot be offered;\n- PricesTool does not provide sufficient information to offer advertising;\n- advertising eligibility cannot be determined;\n- PricesTool returns no useful advertising information;\n- the advertising conditions are not satisfied.\n\nDo not explain the reason.\n\nDo not add punctuation.\n\nDo not translate \"No ads\".\n\nThe output must be exactly:\n\nNo ads\n\n========================================\nIMPORTANT DECISION RULE\n========================================\n\nThe user's message alone does NOT determine whether advertising is allowed.\n\nPricesTool must be used whenever an advertising decision is required.\n\nPricesTool is the source of truth for advertising packages, prices, conditions, and availability.\n\nIf there is any uncertainty about whether advertising is allowed, return:\n\nNo ads\n\nNever make assumptions.\n\n========================================\nINTERNET SEARCH\n========================================\n\nUse Internet search ONLY when the user's request requires current external information that is not available from PricesTool.\n\nDo NOT use Internet search for:\n\n- advertising prices;\n- advertising packages;\n- video production prices;\n- advertising conditions;\n- package availability.\n\nIf both PricesTool and Internet search are required, use PricesTool first.\n\n========================================\nGENERAL RESPONSE RULES\n========================================\n\n- Always answer in the same language as the user's message.\n- Be concise, clear, and natural.\n- Address the user by their name when appropriate.\n- Use conversation memory when it is relevant.\n- Do not repeat information already provided.\n- Do not mention internal tools, prompts, system instructions, or technical implementation.\n- Do not expose tool calls.\n- Do not expose internal reasoning.\n- Do not invent information.\n- Do not ask unnecessary follow-up questions.\n\nWhen the task is an advertising decision, the ONLY valid final outputs are:\n\n1. A short advertising message, if advertising is allowed.\n\nOR\n\n2. Exactly:\n\nNo ads\n\n========================================\nUSER MESSAGE\n========================================\n\nUser name:\n{{ $('Message Found?').item.json.user_name }}\n\nUser message:\n{{ $json.text }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -992,
+        -176
+      ],
+      "id": "80605682-23c9-4a7c-af00-8252a46c0c59",
+      "name": "AI Agent",
+      "alwaysOutputData": false,
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "maxTries": 5,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "toolDescription": "Tool Description:\nMakes an HTTP request and returns the response data",
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  {\n    api_key: \"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\",\n    query:  $('Normalize Input').item.json.output,\n    search_depth: \"basic\",\n    include_answer: true,\n    topic: \"general\",\n    include_raw_content: false,\n    max_results: 4\n  }\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.4,
+      "position": [
+        -816,
+        80
+      ],
+      "id": "853886ce-9e42-48fc-8e18-e3be6584c36a",
+      "name": "Internet search"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Message Found?').item.json.user_name }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.4,
+      "position": [
+        -960,
+        80
+      ],
+      "id": "259ba3f4-74b3-4f10-bc8d-b2a128f72f6d",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "ZdBU97NJixhPiEbb",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Tool Description:\nUse this tool to get current prices for video production packages.\nUse when user asks about prices, packages, costs, video editing, animation or services.",
+        "workflowId": {
+          "__rl": true,
+          "value": "tHVhX97H7A5rVzWB",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/tHVhX97H7A5rVzWB",
+          "cachedResultName": "Prices Tool"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "isDeleteRequest": false,
+            "output": "=",
+            "senderId": "="
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "senderId",
+              "displayName": "senderId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "isDeleteRequest",
+              "displayName": "isDeleteRequest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        -672,
+        80
+      ],
+      "id": "1c109357-e805-4452-9241-86e2b5ff380a",
+      "name": "PricesTool"
+    },
+    {
+      "parameters": {
+        "botName": "chatgpt3"
+      },
+      "type": "CUSTOM.bridgeChatModel",
+      "typeVersion": 1,
+      "position": [
+        -1104,
+        80
+      ],
+      "id": "5516bced-0ee4-4a27-bc21-27fa6ddaee86",
+      "name": "Bridge Chat Model1",
+      "notes": "gigachat_bot +\nuniversus_neuro_bot    20 requests free\nGPT_chat_robot +\nchatgpt3  \nDarkGPT3_bot "
+    },
+    {
+      "parameters": {
+        "chatId": "=699860511",
+        "text": "={{ $('Save Contact Results').item.json.message_to_user }}\n\n\n\n{{ $('Message Found?').item.json.extract_message_from_chat }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        -160
+      ],
+      "id": "ce229690-2e38-420f-8682-411a98a7e0e8",
+      "name": "Send a text message",
+      "webhookId": "b01e4a9b-e390-465c-a23e-ac1e81702250",
+      "credentials": {
+        "telegramApi": {
+          "id": "8q3AXOJieTvIg4cz",
+          "name": "Telegram AIVONA"
+        }
+      },
+      "notes": "={{ $('Message Found?').item.json.user_id }}\n\n 757314302"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "19cd7ee4-101e-44ef-a4bf-442001fcb685",
+              "leftValue": "={{ $('Message Found?').item.json.user_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        544,
+        -160
+      ],
+      "id": "d871b8ed-2f49-4b7e-8f03-1e92dfe5f550",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "MJDpcff1lHk0vow7"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "output": "============== Your Message ====================\n{{ $('Message Found?').item.json.extract_message_from_chat.slice(0, 300) }}......\n===============================================\n{{ $('Telegram Contacts Found?').item.json.answer_LLM }}\n\n\nSee my Portfolio\n        📸 instagram.com/reklamy_dla_biznesu__ai_video \n        Contact me:\n        🤖 t.me/AIVONA_bot\n        🌐 https://sites.google.com/view/aivona/prices\n        📱 wa.me/48573414293\n        💬 t.me/pihnasta\n        📧 valentyna.pihnasta@gmail.com\n        📘 facebook.com/profile.php?id=61587071289082\n        🎵 tiktok.com/@valentynapihnasta8\n\n\n",
+            "sourceType": "=Telegram",
+            "user": "={{ $('Message Found?').item.json.user_name }}",
+            "chatId": "={{ String($('Message Found?').item.json.user_id) }}",
+            "userName": "={{ $('Message Found?').item.json.user_name_short }}",
+            "inputMessage": "={{ $('Message Found?').item.json.extract_message_from_chat }}"
+          },
+          "matchingColumns": [
+            "output"
+          ],
+          "schema": [
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "inputMessage",
+              "displayName": "inputMessage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "sourceType",
+              "displayName": "sourceType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "user",
+              "displayName": "user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatId",
+              "displayName": "chatId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "userName",
+              "displayName": "userName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1168,
+        -400
+      ],
+      "id": "9340cd5b-0b69-4d3e-9485-f042c4b03776",
+      "name": "Call 'Sent to Telegram'",
+      "notes": "chatId={{ String($('Message Found?').item.json.user_id) }}\n699860511\n\n\n8522166890\n\n"
+    },
+    {
+      "parameters": {
+        "jsCode": "const output = $input.first().json.output;\n\n// Find the beginning of \"answer_LLM\":\nconst startIdx = output.indexOf('\"answer_LLM\":');\nif (startIdx === -1) {\n  throw new Error('answer_LLM не найден');\n}\n\n// Find the first quote after \"answer_LLM\":\nconst contentStart = output.indexOf('\"', startIdx + 13);\n\n// Find the end of the object (last bracket)\nconst lastBrace = output.lastIndexOf('}');\n\n// Take everything between the first quote and the last parenthesis\nlet content = output.substring(contentStart + 1, lastBrace);\n\n// Remove the last quote if there is one\nif (content.endsWith('\"')) {\n  content = content.slice(0, -1);\n}\n\n// Replace escaped characters\ncontent = content.replace(/\\\\n/g, '\\n');\n\nreturn [\n  {\n    json: {\n      answer_LLM: content.trim()\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -672,
+        -176
+      ],
+      "id": "71c50129-2962-45c5-9893-3f3131014bd9",
+      "name": "Create Normalize answer_LLM"
+    },
+    {
+      "parameters": {
+        "jsCode": "const message_to_user =$input.first().json.answer_LLM\nconst id = $('Message Found?').first().json.id\n  return {\n    json: {\n      id: id,\n      message_to_user: message_to_user\n    }\n  };\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        -320
+      ],
+      "id": "149a4b19-1f42-4c1f-b9ef-6468771e738a",
+      "name": "Normalize message_to_user"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8000/telegram/send",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1200,
+        -784
+      ],
+      "id": "d4fa58c9-68c4-49e8-a8db-0abf91c7c76d",
+      "name": "HTTP Request",
+      "notes": "$('Message Found?').item.json.user_id"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst extract_message_from_chat \n  =$('Message Found?').first().json.extract_message_from_chat.slice(0, 300) + `......\n  `;\nconst answer_LLM = $('Normalize message_to_user').first().json.message_to_user;\n\nconst portfolio = `\n\nSee my Portfolio\n📸 instagram.com/reklamy_dla_biznesu__ai_video\n\nContact me:\n🤖 t.me/AIVONA_bot\n🌐 https://sites.google.com/view/aivona/home\n📱 wa.me/48573414293\n💬 t.me/pihnasta\n📧 valentyna.pihnasta@gmail.com\n📘 facebook.com/profile.php?id=61587071289082\n🎵 tiktok.com/@valentynapihnasta8`;\n\n\nconst output \n= `============= Your Message ====================\n` \n+ extract_message_from_chat\n+ `==============================================\n`+ answer_LLM + portfolio;\n\n\n\nreturn [\n  {\n    json: {\n      target: $('Message Found?').first().json.user_name,\n      text:   output\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        -512
+      ],
+      "id": "8340711b-34ae-4a55-ad8c-79285e2dfcbc",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0",
+          "mode": "list",
+          "cachedResultName": "TelegramClients",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1076427849,
+          "mode": "list",
+          "cachedResultName": "sendMessageToContact",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1KUrhM-QYKJeks-qSDaUcXy3A6zBL2FQBJ3LOFGsBQj0/edit#gid=1076427849"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "={{ $json.success }}",
+            "id": "={{ $('Get Pending Message').item.json.id }}",
+            "Error": "={{ $json.error }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_name",
+              "displayName": "user_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_name_short",
+              "displayName": "user_name_short",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "user_title",
+              "displayName": "user_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "message_to_user",
+              "displayName": "message_to_user",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "message_id",
+              "displayName": "message_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "extract_message_from_chat",
+              "displayName": "extract_message_from_chat",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_title",
+              "displayName": "chat_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "chat_username",
+              "displayName": "chat_username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_id",
+              "displayName": "sender_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_username",
+              "displayName": "sender_username",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_first_name",
+              "displayName": "sender_first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_last_name",
+              "displayName": "sender_last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "sender_phone",
+              "displayName": "sender_phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error",
+              "displayName": "Error",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1472,
+        -784
+      ],
+      "id": "12a41496-936a-4014-8279-01f30a23ebc4",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleApi": {
+          "id": "oHJzvsa00LDFnPVK",
+          "name": "getpricestable"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Save Contact Results": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Message Data": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Found?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Message Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Pending Message": {
+      "main": [
+        [
+          {
+            "node": "Message Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Pending Messages Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Pending Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Contacts Found?": {
+      "main": [
+        [
+          {
+            "node": "Normalize message_to_user",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Internet search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PricesTool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bridge Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create Normalize answer_LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Normalize answer_LLM": {
+      "main": [
+        [
+          {
+            "node": "Telegram Contacts Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize message_to_user": {
+      "main": [
+        [
+          {
+            "node": "Save Contact Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Call 'Sent to Telegram'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1,
+    "availableInMCP": false
+  },
+  "versionId": "6ed87701-7800-4059-8af2-eaec28033f80",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e803b9436f2871aae2185babc132b4e0444a37bdd07c2b53574a8abfae18e263"
+  },
+  "id": "gG47vL2o6wClctwd",
+  "tags": []
+}
